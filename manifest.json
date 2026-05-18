@@ -1,0 +1,22 @@
+{
+  "name": "LEARNING HUB TEST",
+  "short_name": "HUB TEST",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#00bcd4",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2201/2201573.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2201/2201573.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
