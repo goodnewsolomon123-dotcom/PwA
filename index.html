@@ -1,558 +1,570 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Ox-Bridge • Premium Learning Hub</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script src="https://unpkg.com/lucide@latest"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ox-Bridge • Learn Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;
+  --border:#2a2a3a;--accent:#6c63ff;--accent2:#00e5a0;
+  --danger:#ff4f6a;--warn:#ffb830;--text:#e8e8f0;--muted:#6b6b80;--ng:#008751;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);
+  overflow-x:hidden;min-height:100vh;
+  background-image:linear-gradient(rgba(108,99,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+/* PAGES */
+.page{display:none;min-height:100vh;padding-bottom:80px;}
+.page.active{display:block;animation:fadeIn .35s ease forwards;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes floatP{0%{transform:translateY(100vh) scale(.5)}100%{transform:translateY(-100vh) scale(1.2)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          },
-          colors: {
-            navy: {
-              50: '#f4f6fa',
-              100: '#e9ecf3',
-              700: '#1b2a4a',
-              800: '#111c33',
-              900: '#0b1323',
-              950: '#070a14',
-            },
-            accent: '#3b82f6', // Professional blue accent
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* Premium Page Transitions and Custom Scrollbars */
-    body {
-      font-family: 'Inter', sans-serif;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .page { display: none; }
-    .page.active { display: block; animation: pageFade 0.25s ease-out forwards; }
-    @keyframes pageFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    .dark ::webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-    .light ::webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-  </style>
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;z-index:1000;gap:8px;
+}
+.logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:20px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{
+  font-size:12px;cursor:pointer;padding:6px 9px;border-radius:8px;
+  transition:all .2s;font-family:'Syne',sans-serif;font-weight:600;white-space:nowrap;
+}
+.nav-link:hover{background:var(--surface2);color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.pill{
+  background:var(--surface2);padding:4px 10px;border-radius:9999px;
+  font-size:12px;display:flex;align-items:center;gap:4px;
+  border:1px solid var(--border);cursor:pointer;white-space:nowrap;
+}
+.pill:hover{border-color:var(--accent);}
+.notif-wrap{position:relative;font-size:20px;cursor:pointer;padding:6px;border-radius:50%;transition:background .2s;}
+.notif-wrap:hover{background:var(--surface2);}
+.notif-dot{
+  position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;
+  font-size:9px;width:15px;height:15px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;
+}
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;transition:all .3s;border:none;font-family:'Syne',sans-serif;font-size:14px;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(108,99,255,.3);}
+.btn-outline{background:transparent;border:2px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:var(--accent);color:#fff;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-warn{background:var(--warn);color:#000;}
+.btn-green{background:var(--accent2);color:#000;}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important;}
+/* INPUTS */
+.inp{
+  width:100%;padding:13px 15px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:12px;color:var(--text);
+  font-family:'DM Mono',monospace;font-size:14px;outline:none;
+  transition:border-color .2s;margin-bottom:13px;
+}
+.inp:focus{border-color:var(--accent);}
+.inp::placeholder{color:var(--muted);}
+select.inp option{background:var(--surface2);}
+/* CARDS */
+.card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:20px;transition:border-color .2s;}
+.card-hover:hover{border-color:rgba(108,99,255,.4);cursor:pointer;}
+/* SKELETON */
+.skel{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+/* SPINNER */
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+/* OPTION BUTTONS */
+.opt{
+  width:100%;text-align:left;padding:13px 16px;background:var(--surface2);
+  border:2px solid var(--border);border-radius:12px;color:var(--text);
+  font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;
+  transition:all .2s;margin-bottom:10px;display:block;
+}
+.opt:hover{border-color:var(--accent);background:rgba(108,99,255,.08);}
+.opt.correct{border-color:var(--accent2);background:rgba(0,229,160,.12);color:var(--accent2);}
+.opt.wrong{border-color:var(--danger);background:rgba(255,79,106,.12);color:var(--danger);}
+.opt:disabled{cursor:not-allowed;}
+/* TOAST */
+#toasts{position:fixed;top:70px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:340px;}
+.toast{
+  background:var(--surface);border:2px solid;padding:12px 16px;border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;
+  font-size:13px;animation:fadeIn .3s ease;
+}
+/* NOTIF PANEL */
+#notif-panel{
+  position:fixed;top:60px;right:0;width:320px;max-height:calc(100vh - 60px);
+  background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;
+  z-index:998;transform:translateX(100%);transition:transform .3s ease;padding:16px;
+}
+#notif-panel.open{transform:translateX(0);}
+/* MOBILE MENU */
+#mob-menu{
+  display:none;position:fixed;top:60px;left:0;right:0;bottom:0;
+  background:rgba(10,10,15,.98);z-index:999;padding:20px;overflow-y:auto;
+}
+.mob-btn{
+  display:block;width:100%;padding:16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;color:var(--text);
+  font-family:'Syne',sans-serif;font-size:16px;cursor:pointer;
+  text-align:left;margin-bottom:10px;transition:border-color .2s;
+}
+.mob-btn:hover{border-color:var(--accent);}
+/* PAGE CONTENT */
+.pc{padding:76px 16px 40px;max-width:1200px;margin:0 auto;}
+/* HERO */
+.hero{height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(108,99,255,.6),transparent);animation:floatP 25s linear infinite;}
+/* TIMER BAR */
+#timer-fill{height:6px;border-radius:3px;background:var(--accent2);transition:width 1s linear,background .5s;}
+/* KIDS */
+.kids-bg{background:linear-gradient(135deg,#1a1040,#2a1b5f);}
+.kids-card{border-radius:20px;padding:24px;cursor:pointer;transition:transform .25s;text-align:center;}
+.kids-card:hover{transform:translateY(-6px);}
+/* BADGE */
+.badge-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;transition:transform .2s;}
+.badge-card:hover{transform:translateY(-4px);}
+.badge-card.locked{opacity:.4;filter:grayscale(1);}
+/* CHAT */
+.chat-box{height:360px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;}
+.chat-msg{max-width:78%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.55;}
+.chat-msg.user{background:var(--accent);align-self:flex-end;border-radius:12px 12px 4px 12px;}
+.chat-msg.ai{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px;}
+.chat-msg .role{font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px;}
+/* APP LOADING */
+#app-loading{position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hide-m{display:none!important;}
+  .show-m{display:flex!important;}
+  .grid2,.grid3{grid-template-columns:1fr!important;}
+}
+.show-m{display:none;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+/* ERROR BOX */
+.err-box{color:var(--danger);font-size:13px;padding:10px 13px;background:rgba(255,79,106,.1);border-radius:8px;margin-bottom:12px;display:none;}
+/* TABS */
+.level-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.ltab{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;transition:all .2s;}
+.ltab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+/* SECTION HEADER */
+.sh{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:6px;}
+.sh-sub{color:var(--muted);font-size:13px;margin-bottom:22px;}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-navy-950 dark:text-slate-100 min-h-screen antialiased selection:bg-blue-500/30">
+<body>
 
-  <div id="app-loading" class="fixed inset-0 z-[9999] flex flex-col items-center justify-content-center bg-navy-950 text-white">
-    <div class="tracking-widest font-extrabold text-2xl text-blue-500 mb-4">OX-BRIDGE</div>
-    <div class="w-8 h-8 border-2 border-slate-700 border-t-blue-500 rounded-full animate-spin mb-3"></div>
-    <p class="text-xs text-slate-400">Loading ecosystem variables...</p>
+<div id="app-loading">
+  <div class="logo" style="font-size:28px;">OX-BRIDGE</div>
+  <div class="spinner"></div>
+  <p style="color:var(--muted);font-size:13px;">Powered by Ox-Bridge Technology</p>
+</div>
+
+<div id="toasts"></div>
+
+<nav class="navbar" id="navbar" style="display:none;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="logo" onclick="goHome()">OX-BRIDGE</div>
+    <span style="font-size:11px;color:var(--muted);" class="hide-m">Learning Hub</span>
   </div>
+  <div class="nav-links hide-m" id="desk-nav">
+    <span class="nav-link" onclick="go('page-dashboard')">🏠</span>
+    <span class="nav-link" onclick="go('page-subjects')">📚 Learn</span>
+    <span class="nav-link" onclick="go('page-quiz')">🧠 Quiz</span>
+    <span class="nav-link" onclick="go('page-aichat')">🤖 AI Chat</span>
+    <span class="nav-link" onclick="go('page-past')">📝 Past Q</span>
+    <span class="nav-link" onclick="go('page-kids')">🎮 Kids</span>
+    <span class="nav-link" onclick="go('page-classroom')">💬 Class</span>
+    <span class="nav-link" onclick="go('page-leaderboard')">🏆 Board</span>
+  </div>
+  <div class="nav-right">
+    <div class="pill hide-m">⭐<span id="n-score">0</span></div>
+    <div class="pill hide-m">🔥<span id="n-streak">0</span></div>
+    <div class="pill hide-m">🪙<span id="n-coins">0</span></div>
+    <div class="notif-wrap" onclick="toggleNotif()">🔔<div class="notif-dot" id="ndot"></div></div>
+    <div class="pill" onclick="go('page-profile')" style="cursor:pointer;">👤<span id="n-user">—</span></div>
+    <div class="show-m" onclick="toggleMob()" style="font-size:24px;cursor:pointer;padding:6px;align-items:center;">☰</div>
+  </div>
+</nav>
 
-  <div id="toasts" class="fixed top-20 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full"></div>
+<div id="mob-menu">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="logo">OX-BRIDGE</div>
+    <span onclick="toggleMob()" style="font-size:26px;cursor:pointer;">✕</span>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+    <div class="pill">⭐<span id="m-score">0</span></div>
+    <div class="pill">🔥<span id="m-streak">0</span></div>
+    <div class="pill">🪙<span id="m-coins">0</span></div>
+  </div>
+  <button class="mob-btn" onclick="nav('page-dashboard')">🏠 Dashboard</button>
+  <button class="mob-btn" onclick="nav('page-subjects')">📚 Subjects</button>
+  <button class="mob-btn" onclick="nav('page-quiz')">🧠 Quiz Arena</button>
+  <button class="mob-btn" onclick="nav('page-aichat')">🤖 AI Chat</button>
+  <button class="mob-btn" onclick="nav('page-past')">📝 Past Questions</button>
+  <button class="mob-btn" onclick="nav('page-kids')">🎮 Kids Zone</button>
+  <button class="mob-btn" onclick="nav('page-classroom')">💬 Live Classroom</button>
+  <button class="mob-btn" onclick="nav('page-leaderboard')">🏆 Leaderboard</button>
+  <button class="mob-btn" onclick="nav('page-profile')">👤 Profile</button>
+  <button class="mob-btn" style="border-color:var(--danger);color:var(--danger);" onclick="logout()">🚪 Logout</button>
+</div>
 
-  <nav class="fixed top-0 left-0 right-0 h-16 bg-navy-900 text-white border-b border-navy-800 dark:bg-navy-900 dark:border-navy-800 flex items-center justify-between px-4 lg:px-8 z-[1000]">
-    <div class="flex items-center gap-4">
-      <div class="font-extrabold text-xl tracking-tight text-white cursor-pointer hover:opacity-90" onclick="goHome()">OX-BRIDGE</div>
-      <div class="hidden md:inline-flex px-2 py-0.5 rounded text-[11px] font-medium tracking-wider bg-navy-800 text-slate-300 uppercase">Learning Engine</div>
-    </div>
-
-    <div class="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300" id="desk-nav">
-      <button onclick="go('page-dashboard')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Home</button>
-      <button onclick="go('page-subjects')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="book-open" class="w-4 h-4"></i> Learn</button>
-      <button onclick="go('page-quiz')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="brain-circuit" class="w-4 h-4"></i> Quiz</button>
-      <button onclick="go('page-aichat')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="message-square-code" class="w-4 h-4"></i> AI Chat</button>
-      <button onclick="go('page-past')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="file-text" class="w-4 h-4"></i> Past Q</button>
-      <button onclick="go('page-kids')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="gamepad-2" class="w-4 h-4"></i> Kids</button>
-      <button onclick="go('page-classroom')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="users" class="w-4 h-4"></i> Class</button>
-      <button onclick="go('page-leaderboard')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="trophy" class="w-4 h-4"></i> Board</button>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-navy-800 text-slate-300 hover:text-white transition-colors" title="Toggle Display Theme">
-        <i data-lucide="sun" id="theme-sun-icon" class="w-4 h-4 hidden dark:block"></i>
-        <i data-lucide="moon" id="theme-moon-icon" class="w-4 h-4 block dark:hidden"></i>
-      </button>
-
-      <div class="hidden md:flex items-center gap-2 text-xs">
-        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-amber-400" title="Score"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400/20"></i> <span id="n-score">0</span></div>
-        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-orange-400" title="Streak"><i data-lucide="zap" class="w-3.5 h-3.5 fill-orange-400/20"></i> <span id="n-streak">0</span></div>
-        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-yellow-500" title="Coins"><i data-lucide="coins" class="w-3.5 h-3.5"></i> <span id="n-coins">0</span></div>
-      </div>
-
-      <button onclick="toggleNotif()" class="relative p-2 rounded-md hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
-        <i data-lucide="bell" class="w-4 h-4"></i>
-        <div id="ndot" class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full hidden"></div>
-      </button>
-
-      <button onclick="go('page-profile')" class="flex items-center gap-1.5 text-xs bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-slate-200 hover:border-blue-500 transition-colors">
-        <i data-lucide="user" class="w-3.5 h-3.5"></i> <span id="n-user" class="max-w-[70px] truncate">—</span>
-      </button>
-
-      <button onclick="toggleMob()" class="lg:hidden p-2 rounded-md hover:bg-navy-800 text-white">
-        <i data-lucide="menu" class="w-5 h-5"></i>
-      </button>
-    </div>
-  </nav>
-
-  <div id="mob-menu" class="fixed inset-0 z-[2000] bg-navy-950/98 backdrop-blur-md p-6 hidden flex-col overflow-y-auto text-white">
-    <div class="flex items-center justify-between border-b border-navy-800 pb-4 mb-6">
-      <div class="font-extrabold text-xl tracking-tight text-blue-500">OX-BRIDGE</div>
-      <button onclick="toggleMob()" class="p-2 rounded-md hover:bg-navy-800 text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
-    </div>
-    
-    <div class="grid grid-cols-3 gap-2 mb-6 text-center">
-      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-amber-400 text-xs"><i data-lucide="star" class="w-4 h-4 mx-auto mb-1"></i> Score <span id="m-score" class="block font-bold text-white">0</span></div>
-      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-orange-400 text-xs"><i data-lucide="zap" class="w-4 h-4 mx-auto mb-1"></i> Streak <span id="m-streak" class="block font-bold text-white">0</span></div>
-      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-yellow-500 text-xs"><i data-lucide="coins" class="w-4 h-4 mx-auto mb-1"></i> Coins <span id="m-coins" class="block font-bold text-white">0</span></div>
-    </div>
-
-    <div class="flex flex-col gap-2 font-medium">
-      <button onclick="nav('page-dashboard')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="layout-dashboard" class="w-4 h-4 text-blue-400"></i> Dashboard</button>
-      <button onclick="nav('page-subjects')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="book-open" class="w-4 h-4 text-emerald-400"></i> Subjects</button>
-      <button onclick="nav('page-quiz')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="brain-circuit" class="w-4 h-4 text-purple-400"></i> Quiz Arena</button>
-      <button onclick="nav('page-aichat')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="message-square-code" class="w-4 h-4 text-cyan-400"></i> AI Chat Space</button>
-      <button onclick="nav('page-past')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i> Past Questions</button>
-      <button onclick="nav('page-kids')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400"></i> Kids Zone</button>
-      <button onclick="nav('page-classroom')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="users" class="w-4 h-4 text-amber-400"></i> Live Classroom</button>
-      <button onclick="nav('page-leaderboard')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="trophy" class="w-4 h-4 text-yellow-400"></i> Leaderboard</button>
-      <button onclick="nav('page-profile')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="user" class="w-4 h-4 text-teal-400"></i> Profile Component</button>
-      <button onclick="logout()" class="flex items-center gap-3 w-full p-3 mt-4 border border-rose-900/50 bg-rose-950/20 text-rose-400 rounded-xl text-left hover:bg-rose-900/30 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Complete Logout</button>
+<div id="notif-panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <h3 style="font-family:'Syne',sans-serif;">🔔 Notifications</h3>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button onclick="markAllRead()" class="btn btn-outline" style="padding:5px 10px;font-size:11px;">Mark All Read</button>
+      <span onclick="toggleNotif()" style="cursor:pointer;font-size:20px;">✕</span>
     </div>
   </div>
+  <div id="notif-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
+</div>
 
-  <div id="notif-panel" class="fixed top-16 right-0 bottom-0 w-80 bg-white border-l border-slate-200 shadow-2xl dark:bg-navy-900 dark:border-navy-800 transform translate-x-full transition-transform duration-200 cubic-bezier(0.4, 0, 0.2, 1) z-[998] p-4 flex flex-col">
-    <div class="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 pb-3 mb-4">
-      <h3 class="font-semibold text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-blue-500"></i> Updates Hub</h3>
-      <div class="flex items-center gap-2">
-        <button onclick="markAllRead()" class="text-[11px] px-2 py-1 rounded bg-slate-100 text-slate-600 dark:bg-navy-800 dark:text-slate-300 font-medium hover:opacity-80">Clear All</button>
-        <button onclick="toggleNotif()" class="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+<div id="page-landing" class="page active">
+  <div class="hero">
+    <div style="position:relative;z-index:2;max-width:700px;padding:20px;">
+      <div style="display:inline-block;background:rgba(0,135,81,.2);color:var(--ng);padding:6px 16px;border-radius:9999px;font-size:13px;margin-bottom:20px;">🇳🇬 Built for Nigerian Students</div>
+      <h1 style="font-size:clamp(2rem,6vw,3.5rem);line-height:1.1;font-family:'Syne',sans-serif;font-weight:800;">
+        Learn Smarter<br>with <span style="background:linear-gradient(90deg,#6c63ff,#00e5a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI Power</span>
+      </h1>
+      <p style="margin:20px auto;font-size:1rem;color:var(--muted);max-width:500px;line-height:1.7;">
+        AI-powered lessons, quizzes, and live classrooms for Nursery to University level students in Nigeria.
+      </p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="go('page-signup')" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Get Started Free →</button>
+        <button onclick="go('page-login')" class="btn btn-outline" style="font-size:1rem;padding:14px 32px;">Login</button>
+      </div>
+      <div style="margin-top:50px;display:flex;justify-content:center;gap:36px;flex-wrap:wrap;">
+        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">10,000+</div><div style="color:var(--muted);font-size:13px;">Students</div></div>
+        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">26</div><div style="color:var(--muted);font-size:13px;">Subjects</div></div>
+        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">4</div><div style="color:var(--muted);font-size:13px;">AI Engines</div></div>
+        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">6</div><div style="color:var(--muted);font-size:13px;">Levels</div></div>
       </div>
     </div>
-    <div id="notif-list" class="flex-1 overflow-y-auto text-xs text-slate-500 dark:text-slate-400 space-y-2">
-      <p class="text-center py-8">Fetching notification ledger...</p>
-    </div>
+    <div id="particles"></div>
   </div>
 
-
-  <div id="page-landing" class="page active pt-16">
-    <div class="relative min-h-[85vh] flex items-center justify-center text-center px-4 overflow-hidden bg-gradient-to-b from-navy-900 via-navy-950 to-slate-50 dark:to-navy-950 text-white">
-      <div class="relative z-10 max-w-3xl mx-auto py-12">
-        <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide mb-6">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Federal Republic of Nigeria Core Platform
-        </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none mb-6">
-          Maximize Scholastic Potential <br class="hidden sm:inline"> via <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Adaptive AI Intelligence</span>
-        </h1>
-        <p class="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 font-light leading-relaxed">
-          Integrated curriculum frameworks, simulated performance diagnostics, and synthetic conversational guidance engineered from Nursery modules to Advanced Level university preparation.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
-          <button onclick="go('page-signup')" class="w-full sm:w-auto px-8 py-3.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2">Initiate Setup Sequence <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-          <button onclick="go('page-login')" class="w-full sm:w-auto px-8 py-3.5 bg-navy-800 border border-navy-700 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all">Account Verification Login</button>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mt-16 border-t border-navy-800 pt-8 text-center">
-          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">10,000+</div><div class="text-xs text-slate-400 font-medium mt-1">Active Profiles</div></div>
-          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">26 Unique</div><div class="text-xs text-slate-400 font-medium mt-1">Discipline Branches</div></div>
-          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">4 Framework</div><div class="text-xs text-slate-400 font-medium mt-1">AI Node Matrix</div></div>
-          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">6 Vertical</div><div class="text-xs text-slate-400 font-medium mt-1">Instruction Tiers</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-20">
-      <h2 class="text-center text-2xl lg:text-3xl font-bold tracking-tight mb-4">Core Ecosystem Vectors</h2>
-      <p class="text-center text-slate-500 dark:text-slate-400 max-w-md mx-auto text-sm mb-12">Engineered layouts using modern crisp corners and clear spacing metrics.</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 mb-4"><i data-lucide="cpu" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Synthetic Instruction Nodes</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Dynamically customized textual instruction matching localized student metrics and specific curriculum specifications.</p>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 mb-4"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Automated Evaluation Matrices</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Algorithmic generation of unique structural examinations with detailed validation pathways for each answer tier.</p>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500 mb-4"><i data-lucide="message-square-text" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Conversational AI Sandbox</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Continuous accessibility framework allowing natural voice or code-based interrogation of curriculum topics.</p>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 mb-4"><i data-lucide="history" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Historical Exams Registry</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Full breakdown matrices for past national test parameters, including certified historical inputs for JAMB, WAEC, and NECO platforms.</p>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-500 mb-4"><i data-lucide="smile" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Primary Gamification Matrix</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Cognitive visual puzzles mapped directly to youth skill verification tracks to ensure logic formulation remains sound.</p>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
-          <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-600 mb-4"><i data-lucide="medal" class="w-5 h-5"></i></div>
-          <h3 class="font-semibold text-lg mb-2">Competitive Tier Rankings</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">National level computational ledger sorting performance scores across participating regional institutions.</p>
-        </div>
-      </div>
-    </div>
-
-    <footer class="border-t border-slate-200 bg-slate-100 dark:bg-navy-900 dark:border-navy-800 text-center py-12 px-4 text-xs text-slate-500 dark:text-slate-400">
-      <div class="font-bold text-slate-800 dark:text-white tracking-widest text-sm mb-2">OX-BRIDGE</div>
-      <p class="mb-1">Ecosystem Infrastructure Architecture: Goodnews Solomon</p>
-      <p class="text-blue-500 font-medium">Ox-Bridge Technology Group Corporation</p>
-      <p class="mt-4 text-[10px] uppercase tracking-widest">&copy; 2026 Ox-Bridge Learning Hub. All rights reserved.</p>
-    </footer>
-  </div>
-
-
-  <div id="page-signup" class="page pt-24 pb-12">
-    <div class="max-w-md mx-auto px-4">
-      <button onclick="go('page-landing')" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 mb-4 transition-colors font-medium"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Abort Verification Sequence</button>
-      
-      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl shadow-sm">
-        <div class="text-center mb-6">
-          <div class="font-black tracking-widest text-xl text-blue-500">OX-BRIDGE</div>
-          <h2 class="text-xl font-bold tracking-tight mt-3">Establish Profile Parameters</h2>
-          <p class="text-xs text-slate-400 mt-1">Connect profile identifier metrics to regional learning hubs.</p>
-        </div>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">User Identity Token</label>
-            <input id="su-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="text" placeholder="Minimum 3 characters" autocomplete="username">
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Communication Route Address</label>
-            <input id="su-email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="email" placeholder="name@domain.com" autocomplete="email">
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Secret Keyphrase Matrix</label>
-            <div class="relative">
-              <input id="su-pass" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Minimum 6 indices" autocomplete="new-password">
-              <button onclick="togglePwd('su-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Validate Keyphrase Vector</label>
-            <div class="relative">
-              <input id="su-conf" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Match authorization string" autocomplete="new-password">
-              <button onclick="togglePwd('su-conf', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-
-          <div id="su-err" class="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-xs font-medium hidden dark:bg-rose-950/20 dark:border-rose-900/50 dark:text-rose-400"></div>
-
-          <button onclick="doSignup()" id="su-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Compile Security File</button>
-        </div>
-
-        <p class="text-center text-xs text-slate-400 mt-6">
-          Pre-registered account localized? <span onclick="go('page-login')" class="text-blue-500 cursor-pointer hover:underline font-medium">Verify login data &rarr;</span>
-        </p>
-      </div>
+  <div style="padding:70px 16px;max-width:1100px;margin:0 auto;">
+    <h2 style="text-align:center;font-size:1.8rem;margin-bottom:36px;font-family:'Syne',sans-serif;">Everything You Need to Excel</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;">
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🤖</div><h3 style="font-family:'Syne',sans-serif;">AI Tutor</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Instant explanations on any topic at your level</p></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🧠</div><h3 style="font-family:'Syne',sans-serif;">Smart Quiz</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">AI-generated questions with full explanations</p></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">💬</div><h3 style="font-family:'Syne',sans-serif;">AI Chat Space</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Ask the AI tutor anything, anytime</p></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">📝</div><h3 style="font-family:'Syne',sans-serif;">Past Questions</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Real WAEC &amp; JAMB questions with explanations</p></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🎮</div><h3 style="font-family:'Syne',sans-serif;">Kids Zone</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Fun educational games for younger students</p></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🏆</div><h3 style="font-family:'Syne',sans-serif;">Leaderboard</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Compete with students across Nigeria</p></div>
     </div>
   </div>
 
-
-  <div id="page-login" class="page pt-24 pb-12">
-    <div class="max-w-md mx-auto px-4">
-      <button onclick="go('page-landing')" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 mb-4 transition-colors font-medium"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Abort Login Pipeline</button>
-      
-      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl shadow-sm" id="login-card">
-        <div class="text-center mb-6">
-          <div class="font-black tracking-widest text-xl text-blue-500">OX-BRIDGE</div>
-          <h2 class="text-xl font-bold tracking-tight mt-3">System Access Verification</h2>
-          <p class="text-xs text-slate-400 mt-1">Provide credential variables to map authorization state.</p>
-        </div>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Account Identity Pointer</label>
-            <input id="li-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="text" placeholder="Username entry token" autocomplete="username">
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Authorization Code</label>
-            <div class="relative">
-              <input id="li-pass" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Credential characters" autocomplete="current-password">
-              <button onclick="togglePwd('li-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-
-          <div id="li-err" class="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-xs font-medium hidden dark:bg-rose-950/20 dark:border-rose-900/50 dark:text-rose-400"></div>
-
-          <button onclick="doLogin()" id="li-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Authorize Session Link</button>
-        </div>
-
-        <p class="text-center text-xs text-slate-400 mt-6">
-          Missing credential database files? <span onclick="go('page-signup')" class="text-blue-500 cursor-pointer hover:underline font-medium">Build profile data &rarr;</span>
-        </p>
-      </div>
+  <div style="padding:50px 16px;max-width:800px;margin:0 auto;text-align:center;">
+    <h2 style="font-size:1.8rem;margin-bottom:36px;font-family:'Syne',sans-serif;">How It Works</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">📝</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">1. Sign Up</h3><p style="color:var(--muted);font-size:13px;">Create your free account in seconds</p></div>
+      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">📚</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">2. Choose Level</h3><p style="color:var(--muted);font-size:13px;">From Nursery to University</p></div>
+      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">🚀</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">3. Start Learning</h3><p style="color:var(--muted);font-size:13px;">AI teaches you instantly</p></div>
     </div>
   </div>
 
+  <div style="background:linear-gradient(90deg,var(--accent),#00e5a0);color:#000;padding:50px 20px;text-align:center;margin:20px 16px;border-radius:24px;">
+    <h2 style="font-size:1.8rem;margin-bottom:14px;font-family:'Syne',sans-serif;">Ready to start your learning journey?</h2>
+    <button onclick="go('page-signup')" class="btn" style="background:#fff;color:#000;font-size:1rem;padding:14px 36px;">Create Free Account</button>
+  </div>
 
-  <div id="page-dashboard" class="page pt-24 pb-12">
-    <div class="max-w-7xl mx-auto px-4 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h2 id="greeting" class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white"></h2>
-          <p class="text-xs text-slate-400 mt-0.5">Ecosystem parameter validation stable. Select diagnostic target matrix.</p>
+  <footer style="text-align:center;padding:50px 16px;color:var(--muted);font-size:13px;">
+    <div class="logo" style="font-size:18px;margin-bottom:10px;">OX-BRIDGE</div>
+    <p style="margin-bottom:4px;">Built with ❤️ by Goodnews Solomon</p>
+    <p style="color:var(--accent);font-weight:600;">Ox-Bridge Technology</p>
+    <p style="margin-top:16px;">© 2026 Ox-Bridge Learning Hub. All rights reserved.</p>
+  </footer>
+</div>
+
+<div id="page-signup" class="page">
+  <div style="max-width:420px;margin:70px auto 40px;padding:16px;">
+    <div onclick="go('page-landing')" style="cursor:pointer;font-size:26px;margin-bottom:16px;color:var(--muted);">←</div>
+    <div class="card" style="padding:32px 24px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div class="logo" style="font-size:24px;">OX-BRIDGE</div>
+        <h2 style="margin-top:14px;font-family:'Syne',sans-serif;">Create Account</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:6px;">Join thousands of Nigerian students</p>
+      </div>
+      <input id="su-user" class="inp" type="text" placeholder="Username (min 3 chars)" autocomplete="username">
+      <input id="su-email" class="inp" type="email" placeholder="your@email.com" autocomplete="email">
+      <div style="position:relative;">
+        <input id="su-pass" class="inp" type="password" placeholder="Password (min 6 chars)" style="padding-right:46px;" autocomplete="new-password">
+        <span onclick="togglePwd('su-pass',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+      </div>
+      <div style="position:relative;">
+        <input id="su-conf" class="inp" type="password" placeholder="Confirm Password" style="padding-right:46px;" autocomplete="new-password">
+        <span onclick="togglePwd('su-conf',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+      </div>
+      <div id="su-err" class="err-box"></div>
+      <button onclick="doSignup()" id="su-btn" class="btn btn-primary" style="width:100%;padding:14px;">Create Account</button>
+      <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px;">
+        Already have an account? <span onclick="go('page-login')" style="color:var(--accent);cursor:pointer;">Login →</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="page-login" class="page">
+  <div style="max-width:420px;margin:70px auto 40px;padding:16px;">
+    <div onclick="go('page-landing')" style="cursor:pointer;font-size:26px;margin-bottom:16px;color:var(--muted);">←</div>
+    <div class="card" style="padding:32px 24px;" id="login-card">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div class="logo" style="font-size:24px;">OX-BRIDGE</div>
+        <h2 style="margin-top:14px;font-family:'Syne',sans-serif;">Welcome Back 👋</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:6px;">Login to continue learning</p>
+      </div>
+      <input id="li-user" class="inp" type="text" placeholder="Username" autocomplete="username">
+      <div style="position:relative;">
+        <input id="li-pass" class="inp" type="password" placeholder="Password" style="padding-right:46px;" autocomplete="current-password">
+        <span onclick="togglePwd('li-pass',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+      </div>
+      <div id="li-err" class="err-box"></div>
+      <button onclick="doLogin()" id="li-btn" class="btn btn-primary" style="width:100%;padding:14px;">Login</button>
+      <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px;">
+        Don't have an account? <span onclick="go('page-signup')" style="color:var(--accent);cursor:pointer;">Sign up →</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="page-dashboard" class="page">
+  <div class="pc">
+    <div id="greeting" style="font-size:1.5rem;font-family:'Syne',sans-serif;font-weight:800;margin-bottom:4px;"></div>
+    <p style="color:var(--muted);margin-bottom:24px;font-size:13px;">Ready to learn something new today?</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:24px;">
+      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">⭐</div><div id="ds-score" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Score</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🔥</div><div id="ds-streak" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Streak</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🧠</div><div id="ds-quizzes" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Quizzes</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🪙</div><div id="ds-coins" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Coins</div></div>
+    </div>
+    <div class="card" style="border:2px solid var(--warn);margin-bottom:24px;">
+      <h3 style="color:var(--warn);font-family:'Syne',sans-serif;margin-bottom:4px;">⚡ Daily Challenge</h3>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Answer correctly for +5 points &amp; +10 coins!</p>
+      <div id="dc-area"><div class="skel" style="height:18px;margin-bottom:8px;"></div><div class="skel" style="height:40px;"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+      <div>
+        <h3 style="margin-bottom:14px;font-family:'Syne',sans-serif;">⚡ Quick Study</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <div onclick="openLearn('Mathematics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📐<br><small>Maths</small></div>
+          <div onclick="openLearn('English Language','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📖<br><small>English</small></div>
+          <div onclick="openLearn('Biology','SSS')" class="card card-hover" style="text-align:center;padding:12px;">🔬<br><small>Biology</small></div>
+          <div onclick="openLearn('Physics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">⚛️<br><small>Physics</small></div>
+          <div onclick="openLearn('Chemistry','SSS')" class="card card-hover" style="text-align:center;padding:12px;">⚗️<br><small>Chem</small></div>
+          <div onclick="openLearn('Economics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📊<br><small>Econs</small></div>
         </div>
       </div>
-
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
-          <div class="p-3 rounded-lg bg-amber-500/10 text-amber-500"><i data-lucide="star" class="w-5 h-5"></i></div>
-          <div><div id="ds-score" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Aggregated Points</div></div>
+      <div>
+        <h3 style="margin-bottom:14px;font-family:'Syne',sans-serif;">🏅 My Badges</h3>
+        <div id="ds-badges" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div class="skel" style="width:54px;height:54px;border-radius:10px;"></div>
+          <div class="skel" style="width:54px;height:54px;border-radius:10px;"></div>
         </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
-          <div class="p-3 rounded-lg bg-orange-500/10 text-orange-500"><i data-lucide="zap" class="w-5 h-5"></i></div>
-          <div><div id="ds-streak" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Sequential Days</div></div>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
-          <div class="p-3 rounded-lg bg-purple-500/10 text-purple-500"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
-          <div><div id="ds-quizzes" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Evaluations Finished</div></div>
-        </div>
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
-          <div class="p-3 rounded-lg bg-yellow-500/10 text-yellow-600"><i data-lucide="coins" class="w-5 h-5"></i></div>
-          <div><div id="ds-coins" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Ecosystem Ledger Balance</div></div>
-        </div>
+        <button onclick="go('page-profile')" class="btn btn-outline" style="margin-top:14px;padding:8px 16px;font-size:12px;">View All Badges</button>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="bg-amber-50/50 border border-amber-200/60 dark:bg-amber-950/10 dark:border-amber-900/30 p-6 rounded-xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="flex-1">
-          <h3 class="text-amber-700 dark:text-amber-400 text-sm font-semibold flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i> Continuous Evaluation Sequence</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl">Resolve current task criteria successfully to unlock point weight variables (+5 rating tokens, +10 standard coins).</p>
-          <div id="dc-area" class="mt-4 text-sm font-medium text-slate-800 dark:text-slate-200">
-            <div class="animate-pulse bg-slate-200 dark:bg-navy-800 h-4 w-2/3 rounded mb-2"></div>
-            <div class="animate-pulse bg-slate-200 dark:bg-navy-800 h-10 w-full rounded"></div>
-          </div>
-        </div>
+<div id="page-subjects" class="page">
+  <div class="pc">
+    <div class="sh">📚 Subjects</div>
+    <p class="sh-sub">Choose your level and pick a subject to start learning</p>
+    <div class="level-tabs" id="level-tabs"></div>
+    <div id="subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;"></div>
+  </div>
+</div>
+
+<div id="page-learn" class="page">
+  <div class="pc" style="max-width:800px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <span onclick="go('page-subjects')" style="cursor:pointer;font-size:22px;color:var(--muted);">←</span>
+      <div class="sh" style="margin:0;">🤖 AI Tutor</div>
+    </div>
+    <div class="card" style="margin-bottom:18px;">
+      <div class="grid2" style="margin-bottom:12px;">
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">TOPIC</label><input id="l-topic" class="inp" style="margin:0;" placeholder="e.g. Photosynthesis"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">SUBJECT</label><input id="l-subj" class="inp" style="margin:0;" placeholder="e.g. Biology"></div>
       </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2">
-          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="forward" class="w-4 h-4"></i> Fast Instruction Routing</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div onclick="openLearn('Mathematics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3"><i data-lucide="binary" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">Mathematics</span>
-            </div>
-            <div onclick="openLearn('English Language','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3"><i data-lucide="languages" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">English Lang.</span>
-            </div>
-            <div onclick="openLearn('Biology','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-teal-500/10 text-teal-500 flex items-center justify-center mb-3"><i data-lucide="microscope" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">Biology Science</span>
-            </div>
-            <div onclick="openLearn('Physics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-3"><i data-lucide="atom" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">Physics Theory</span>
-            </div>
-            <div onclick="openLearn('Chemistry','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-pink-500/10 text-pink-500 flex items-center justify-center mb-3"><i data-lucide="flask-conical" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">Chemistry Lab</span>
-            </div>
-            <div onclick="openLearn('Economics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
-              <div class="w-8 h-8 mx-auto rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center mb-3"><i data-lucide="line-chart" class="w-4 h-4"></i></div>
-              <span class="text-xs font-semibold">Economics Map</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="award" class="w-4 h-4"></i> Credentials Log</h3>
-          <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl">
-            <div id="ds-badges" class="flex flex-wrap gap-2">
-              <div class="bg-slate-100 dark:bg-navy-950 w-12 h-12 rounded-lg animate-pulse"></div>
-              <div class="bg-slate-100 dark:bg-navy-950 w-12 h-12 rounded-lg animate-pulse"></div>
-            </div>
-            <button onclick="go('page-profile')" class="w-full text-center mt-6 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 transition-colors">Access Profile Badge Vault</button>
-          </div>
+      <div style="margin-bottom:12px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">LEVEL</label>
+        <select id="l-level" class="inp" style="margin:0;">
+          <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
+        </select>
+      </div>
+      <button onclick="doLearn()" id="l-btn" class="btn btn-primary">✨ Teach Me</button>
+    </div>
+    <div id="l-loading" style="display:none;" class="card" style="text-align:center;padding:30px;">
+      <div style="font-size:2rem;animation:bounce 1s infinite;">🤖</div>
+      <p style="color:var(--muted);margin-top:10px;">AI is preparing your lesson...</p>
+    </div>
+    <div id="l-result" style="display:none;">
+      <div class="card" style="border-color:var(--accent2);">
+        <h3 id="l-title" style="font-family:'Syne',sans-serif;color:var(--accent2);margin-bottom:14px;"></h3>
+        <div id="l-text" style="line-height:1.9;font-size:14px;white-space:pre-wrap;"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+          <button onclick="logStudy()" class="btn btn-outline" style="font-size:12px;padding:8px 14px;">📝 Log Study</button>
+          <button onclick="goQuizFromLearn()" class="btn btn-primary" style="font-size:12px;padding:8px 14px;">🧠 Take Quiz</button>
+          <button onclick="go('page-aichat')" class="btn" style="background:var(--surface2);font-size:12px;padding:8px 14px;">💬 Ask AI More</button>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-
-  <div id="page-subjects" class="page pt-24 pb-12">
-    <div class="max-w-7xl mx-auto px-4 lg:px-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2.5"><i data-lucide="book-open" class="w-6 h-6 text-blue-500"></i> Course Management System</h2>
-        <p class="text-xs text-slate-400 mt-1">Select structural instructional criteria metrics by tier to trigger content engines.</p>
+<div id="page-quiz" class="page">
+  <div class="pc" style="max-width:700px;">
+    <div class="sh">🧠 Quiz Arena</div>
+    <p class="sh-sub">Test your knowledge with AI-generated questions</p>
+    <div id="qz-setup" class="card">
+      <div class="grid3" style="margin-bottom:14px;">
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">SUBJECT</label><input id="qz-subj" class="inp" style="margin:0;" placeholder="e.g. Mathematics"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">LEVEL</label>
+          <select id="qz-level" class="inp" style="margin:0;"><option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option></select>
+        </div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">TOPIC (optional)</label><input id="qz-topic" class="inp" style="margin:0;" placeholder="e.g. Algebra"></div>
       </div>
-
-      <div class="flex flex-wrap gap-1.5 border-b border-slate-200 dark:border-navy-800 pb-4 mb-6" id="level-tabs"></div>
-      
-      <div id="subjects-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+      <button onclick="startQuiz()" id="qz-btn" class="btn btn-primary" style="padding:13px 28px;">▶ Start Quiz</button>
     </div>
   </div>
+</div>
 
+<div id="page-aichat" class="page"></div>
+<div id="page-past" class="page"></div>
+<div id="page-kids" class="page"></div>
+<div id="page-classroom" class="page"></div>
+<div id="page-leaderboard" class="page"></div>
+<div id="page-profile" class="page"></div>
 
-  <div id="page-learn" class="page pt-24 pb-12">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="flex items-center gap-3 mb-6">
-        <button onclick="go('page-subjects')" class="p-2 border border-slate-200 dark:border-navy-800 rounded-lg hover:bg-slate-100 dark:hover:bg-navy-900 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>
-        <div>
-          <h2 class="text-xl font-bold tracking-tight">AI Instruction Matrix</h2>
-          <p class="text-xs text-slate-400 mt-0.5">Automated prompt alignment configuration core.</p>
-        </div>
-      </div>
+<script>
+// Global state variables
+const API = "https://api.oxbridge.example.com"; // Setup placeholder or custom API string
+let CU = null; 
 
-      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl space-y-4 mb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Instruction Theme Matrix</label>
-            <input id="l-topic" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Chemical Equilibrium">
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Discipline Vector Group</label>
-            <input id="l-subj" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Chemistry">
-          </div>
-        </div>
-        <div>
-          <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Dynamic Vertical</label>
-          <select id="l-level" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors">
-            <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
-          </select>
-        </div>
-        <button onclick="doLearn()" id="l-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"><i data-lucide="cpu" class="w-4 h-4"></i> Execute Synthetic Learning Assembly</button>
-      </div>
+// Initial router control 
+function go(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  if(target) target.classList.add('active');
+  
+  // Conditionally hide navbar on authentication pages 
+  if(pageId === 'page-landing' || pageId === 'page-signup' || pageId === 'page-login') {
+    document.getElementById('navbar').style.display = 'none';
+  } else {
+    document.getElementById('navbar').style.display = 'flex';
+  }
+}
 
-      <div id="l-loading" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-12 rounded-xl text-center hidden">
-        <div class="w-8 h-8 border-2 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-        <p class="text-sm font-medium">Assembling logic parameters down to structural variables...</p>
-      </div>
+function goHome() { go('page-landing'); }
+function toggleMob() {
+  const menu = document.getElementById('mob-menu');
+  menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+}
+function nav(pageId) { toggleMob(); go(pageId); }
+function toggleNotif() {
+  document.getElementById('notif-panel').classList.toggle('open');
+}
 
-      <div id="l-result" class="hidden">
-        <div class="bg-white border-2 border-blue-500/30 dark:bg-navy-900 p-6 rounded-xl shadow-sm">
-          <h3 id="l-title" class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-4 tracking-tight"></h3>
-          <div id="l-text" class="text-sm leading-relaxed whitespace-pre-wrap text-slate-700 dark:text-slate-300 font-normal"></div>
-          
-          <div class="flex flex-wrap gap-2 border-t border-slate-100 dark:border-navy-800 pt-6 mt-6">
-            <button onclick="logStudy()" class="px-4 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 flex items-center gap-1.5"><i data-lucide="save" class="w-3.5 h-3.5"></i> Log Study Matrix</button>
-            <button onclick="goQuizFromLearn()" class="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-1.5 shadow-sm"><i data-lucide="brain-circuit" class="w-3.5 h-3.5"></i> Initialize Diagnostic Quiz</button>
-            <button onclick="go('page-aichat')" class="px-4 py-2 bg-slate-100 text-slate-700 dark:bg-navy-800 dark:text-slate-300 text-xs font-semibold rounded-lg hover:opacity-90 flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Run Deep Cross Examination</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+// Password field visibility toggle
+function togglePwd(id, el) {
+  const input = document.getElementById(id);
+  if(input.type === "password") {
+    input.type = "text";
+    el.innerText = "🙈";
+  } else {
+    input.type = "password";
+    el.innerText = "👁";
+  }
+}
 
+// Custom app screen display initializer
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.getElementById('app-loading').style.display = 'none';
+    go('page-landing');
+  }, 1200);
+  makeParticles();
+});
 
-  <div id="page-quiz" class="page pt-24 pb-12">
-    <div class="max-w-2xl mx-auto px-4">
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2.5"><i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i> Performance Evaluation Block</h2>
-        <p class="text-xs text-slate-400 mt-1">Real-time evaluation generated to map comprehension variables.</p>
-      </div>
+// Toast Notifications
+function toast(msg, type = "success") {
+  const box = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = `toast`;
+  t.style.borderColor = type === "success" ? "var(--accent2)" : "var(--danger)";
+  t.innerText = msg;
+  box.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
 
-      <div id="qz-setup" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Discipline</label>
-            <input id="qz-subj" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Physics">
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Tier Matrix</label>
-            <select id="qz-level" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors">
-              <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Variable Subsector</label>
-            <input id="qz-topic" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Wave Mechanics">
-          </div>
-        </div>
-        <button onclick="startQuiz()" id="qz-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"><i data-lucide="play" class="w-4 h-4"></i> Trigger Array Validation Run</button>
-      </div>
+// Simple authentication placeholder triggers
+function doSignup() {
+  const user = document.getElementById('su-user').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass = document.getElementById('su-pass').value;
+  const conf = document.getElementById('su-conf').value;
+  const errBox = document.getElementById('su-err');
+  
+  errBox.style.display = 'none';
+  if(user.length < 3) { errBox.innerText = "Username too short!"; errBox.style.display='block'; return; }
+  if(!email.includes('@')) { errBox.innerText = "Invalid email formatting!"; errBox.style.display='block'; return; }
+  if(pass.length < 6) { errBox.innerText = "Password must be min 6 chars!"; errBox.style.display='block'; return; }
+  if(pass !== conf) { errBox.innerText = "Passwords do not match!"; errBox.style.display='block'; return; }
+  
+  CU = user;
+  document.getElementById('n-user').innerText = CU;
+  toast("Account Created!", "success");
+  go('page-dashboard');
+}
 
-      <div id="qz-active" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-200 dark:border-navy-800 pb-3">
-          <div class="text-sm font-bold tracking-tight text-blue-500" id="qz-counter">Processing item index 1/5</div>
-          <div class="flex items-center gap-2 text-xs font-semibold">
-            <div class="px-2.5 py-1 bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-md flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 text-amber-500"></i> <span id="qz-live">0</span></div>
-            <div class="px-2.5 py-1 bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-md flex items-center gap-1 text-slate-500"><i data-lucide="clock" class="w-3.5 h-3.5"></i> <span id="qz-time">30</span>s</div>
-          </div>
-        </div>
+function doLogin() {
+  const user = document.getElementById('li-user').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  const errBox = document.getElementById('li-err');
+  
+  errBox.style.display = 'none';
+  if(!user || !pass) { errBox.innerText = "Please fill in all fields."; errBox.style.display='block'; return; }
+  
+  CU = user;
+  document.getElementById('n-user').innerText = CU;
+  toast("Welcome Back!", "success");
+  go('page-dashboard');
+}
 
-        <div class="w-full bg-slate-200 dark:bg-navy-800 h-1.5 rounded-full overflow-hidden">
-          <div id="timer-fill" class="bg-blue-500 h-full w-full transition-all duration-1000 linear"></div>
-        </div>
+function logout() {
+  CU = null;
+  toast("Logged Out", "warn");
+  go('page-landing');
+}
 
-        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm">
-          <p id="qz-q" class="text-base font-semibold leading-relaxed text-slate-800 dark:text-slate-100 mb-6"></p>
-          <div id="qz-opts" class="space-y-2.5"></div>
-          
-          <div id="qz-expl" class="p-4 bg-blue-50/50 border-l-4 border-blue-500 rounded-r-xl text-xs leading-relaxed text-slate-600 hidden dark:bg-navy-950/40 dark:text-slate-400 mt-4"></div>
-          <button onclick="nextQ()" id="qz-next" class="px-6 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors hidden mt-4 shadow-sm">Advance Matrix Index &rarr;</button>
-        </div>
-      </div>
-
-      <div id="qz-results" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl text-center hidden">
-        <div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
-        <h2 id="qz-final" class="text-3xl font-extrabold tracking-tight mb-2 text-slate-900 dark:text-white"></h2>
-        <p id="qz-msg" class="text-xs text-slate-400 max-w-sm mx-auto mb-6"></p>
-        <div id="qz-new-badges" class="mb-4"></div>
-        
-        <div class="flex items-center justify-center gap-2">
-          <button onclick="retakeQuiz()" class="px-5 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 transition-colors">Re-Run Evaluation Array</button>
-          <button onclick="go('page-leaderboard')" class="px-5 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Commit Metrics To Board</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // System dynamic triggers for dark mode toggle execution
-    function toggleTheme() {
-      const html = document.documentElement;
-      if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        html.classList.add('light');
-        localStorage.setItem('theme', 'light');
-      } else {
-        html.classList.remove('light');
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      }
-    }
-
-    // Intercept default script loader to refresh vector definitions automatically 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (window.lucide) {
-        window.lucide.createIcons();
-      }
-      
-      // Simulate original loader teardown for UI visual clarity
-      setTimeout(() => {
-        const loader = document.getElementById('app-loading');
-        if(loader) loader.style.display = 'none';
-        const navBar = document.getElementById('navbar');
-        if(navBar) navBar.style.display = 'flex';
-      }, 800);
-    });
-
-    // Patch for dynamic views to ensure icons populate on generated nodes
-    const originalGo = window.go || function(){};
-    window.go = function(pageId) {
-      originalGo(pageId);
-      setTimeout(() => { if(window.lucide) window.lucide.createIcons(); }, 50);
-    }
-  </script>
+// Ambient Background Animation Particles
+function makeParticles(){
+  const c = document.getElementById("particles"); if(!c) return;
+  for(let i=0; i<12; i++){
+    const p = document.createElement("div"); p.className = "particle";
+    p.style.cssText = `left:${Math.random()*100}vw;width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;animation-duration:${Math.random()*20+15}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.4}`;
+    c.appendChild(p);
+  }
+}
+</script>
 </body>
 </html>
