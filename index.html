@@ -1,55 +1,557 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PWA Test App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Ox-Bridge • Premium Learning Hub</title>
   
-  <!-- The crucial manifest link for GitHub Pages -->
-  <link rel="manifest" href="./manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- iOS support tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2201/2201573.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f4f6fa',
+              100: '#e9ecf3',
+              700: '#1b2a4a',
+              800: '#111c33',
+              900: '#0b1323',
+              950: '#070a14',
+            },
+            accent: '#3b82f6', // Professional blue accent
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
+    /* Premium Page Transitions and Custom Scrollbars */
     body {
-      font-family: sans-serif;
-      background-color: #121212;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    .card {
-      background-color: #1e1e1e;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    h1 { color: #00bcd4; }
+    .page { display: none; }
+    .page.active { display: block; animation: pageFade 0.25s ease-out forwards; }
+    @keyframes pageFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    .dark ::webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    .light ::webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 dark:bg-navy-950 dark:text-slate-100 min-h-screen antialiased selection:bg-blue-500/30">
 
-  <div class="card">
-    <h1>Learning Hub Test</h1>
-    <p>If you see "Install App" in Chrome's menu, your setup is officially 100% correct!</p>
+  <div id="app-loading" class="fixed inset-0 z-[9999] flex flex-col items-center justify-content-center bg-navy-950 text-white">
+    <div class="tracking-widest font-extrabold text-2xl text-blue-500 mb-4">OX-BRIDGE</div>
+    <div class="w-8 h-8 border-2 border-slate-700 border-t-blue-500 rounded-full animate-spin mb-3"></div>
+    <p class="text-xs text-slate-400">Loading ecosystem variables...</p>
   </div>
 
-  <!-- Service Worker Registration Script -->
+  <div id="toasts" class="fixed top-20 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full"></div>
+
+  <nav class="fixed top-0 left-0 right-0 h-16 bg-navy-900 text-white border-b border-navy-800 dark:bg-navy-900 dark:border-navy-800 flex items-center justify-between px-4 lg:px-8 z-[1000]">
+    <div class="flex items-center gap-4">
+      <div class="font-extrabold text-xl tracking-tight text-white cursor-pointer hover:opacity-90" onclick="goHome()">OX-BRIDGE</div>
+      <div class="hidden md:inline-flex px-2 py-0.5 rounded text-[11px] font-medium tracking-wider bg-navy-800 text-slate-300 uppercase">Learning Engine</div>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300" id="desk-nav">
+      <button onclick="go('page-dashboard')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Home</button>
+      <button onclick="go('page-subjects')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="book-open" class="w-4 h-4"></i> Learn</button>
+      <button onclick="go('page-quiz')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="brain-circuit" class="w-4 h-4"></i> Quiz</button>
+      <button onclick="go('page-aichat')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="message-square-code" class="w-4 h-4"></i> AI Chat</button>
+      <button onclick="go('page-past')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="file-text" class="w-4 h-4"></i> Past Q</button>
+      <button onclick="go('page-kids')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="gamepad-2" class="w-4 h-4"></i> Kids</button>
+      <button onclick="go('page-classroom')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="users" class="w-4 h-4"></i> Class</button>
+      <button onclick="go('page-leaderboard')" class="flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-navy-800 hover:text-white transition-colors"><i data-lucide="trophy" class="w-4 h-4"></i> Board</button>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-navy-800 text-slate-300 hover:text-white transition-colors" title="Toggle Display Theme">
+        <i data-lucide="sun" id="theme-sun-icon" class="w-4 h-4 hidden dark:block"></i>
+        <i data-lucide="moon" id="theme-moon-icon" class="w-4 h-4 block dark:hidden"></i>
+      </button>
+
+      <div class="hidden md:flex items-center gap-2 text-xs">
+        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-amber-400" title="Score"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400/20"></i> <span id="n-score">0</span></div>
+        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-orange-400" title="Streak"><i data-lucide="zap" class="w-3.5 h-3.5 fill-orange-400/20"></i> <span id="n-streak">0</span></div>
+        <div class="flex items-center gap-1 bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-yellow-500" title="Coins"><i data-lucide="coins" class="w-3.5 h-3.5"></i> <span id="n-coins">0</span></div>
+      </div>
+
+      <button onclick="toggleNotif()" class="relative p-2 rounded-md hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
+        <i data-lucide="bell" class="w-4 h-4"></i>
+        <div id="ndot" class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full hidden"></div>
+      </button>
+
+      <button onclick="go('page-profile')" class="flex items-center gap-1.5 text-xs bg-navy-800 border border-navy-700 px-2.5 py-1 rounded-md text-slate-200 hover:border-blue-500 transition-colors">
+        <i data-lucide="user" class="w-3.5 h-3.5"></i> <span id="n-user" class="max-w-[70px] truncate">—</span>
+      </button>
+
+      <button onclick="toggleMob()" class="lg:hidden p-2 rounded-md hover:bg-navy-800 text-white">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mob-menu" class="fixed inset-0 z-[2000] bg-navy-950/98 backdrop-blur-md p-6 hidden flex-col overflow-y-auto text-white">
+    <div class="flex items-center justify-between border-b border-navy-800 pb-4 mb-6">
+      <div class="font-extrabold text-xl tracking-tight text-blue-500">OX-BRIDGE</div>
+      <button onclick="toggleMob()" class="p-2 rounded-md hover:bg-navy-800 text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+    </div>
+    
+    <div class="grid grid-cols-3 gap-2 mb-6 text-center">
+      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-amber-400 text-xs"><i data-lucide="star" class="w-4 h-4 mx-auto mb-1"></i> Score <span id="m-score" class="block font-bold text-white">0</span></div>
+      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-orange-400 text-xs"><i data-lucide="zap" class="w-4 h-4 mx-auto mb-1"></i> Streak <span id="m-streak" class="block font-bold text-white">0</span></div>
+      <div class="bg-navy-900 border border-navy-800 p-2 rounded-lg text-yellow-500 text-xs"><i data-lucide="coins" class="w-4 h-4 mx-auto mb-1"></i> Coins <span id="m-coins" class="block font-bold text-white">0</span></div>
+    </div>
+
+    <div class="flex flex-col gap-2 font-medium">
+      <button onclick="nav('page-dashboard')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="layout-dashboard" class="w-4 h-4 text-blue-400"></i> Dashboard</button>
+      <button onclick="nav('page-subjects')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="book-open" class="w-4 h-4 text-emerald-400"></i> Subjects</button>
+      <button onclick="nav('page-quiz')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="brain-circuit" class="w-4 h-4 text-purple-400"></i> Quiz Arena</button>
+      <button onclick="nav('page-aichat')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="message-square-code" class="w-4 h-4 text-cyan-400"></i> AI Chat Space</button>
+      <button onclick="nav('page-past')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i> Past Questions</button>
+      <button onclick="nav('page-kids')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400"></i> Kids Zone</button>
+      <button onclick="nav('page-classroom')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="users" class="w-4 h-4 text-amber-400"></i> Live Classroom</button>
+      <button onclick="nav('page-leaderboard')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="trophy" class="w-4 h-4 text-yellow-400"></i> Leaderboard</button>
+      <button onclick="nav('page-profile')" class="flex items-center gap-3 w-full p-3 bg-navy-900 border border-navy-800 rounded-xl text-left hover:border-blue-500 transition-all"><i data-lucide="user" class="w-4 h-4 text-teal-400"></i> Profile Component</button>
+      <button onclick="logout()" class="flex items-center gap-3 w-full p-3 mt-4 border border-rose-900/50 bg-rose-950/20 text-rose-400 rounded-xl text-left hover:bg-rose-900/30 transition-all"><i data-lucide="log-out" class="w-4 h-4"></i> Complete Logout</button>
+    </div>
+  </div>
+
+  <div id="notif-panel" class="fixed top-16 right-0 bottom-0 w-80 bg-white border-l border-slate-200 shadow-2xl dark:bg-navy-900 dark:border-navy-800 transform translate-x-full transition-transform duration-200 cubic-bezier(0.4, 0, 0.2, 1) z-[998] p-4 flex flex-col">
+    <div class="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 pb-3 mb-4">
+      <h3 class="font-semibold text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-blue-500"></i> Updates Hub</h3>
+      <div class="flex items-center gap-2">
+        <button onclick="markAllRead()" class="text-[11px] px-2 py-1 rounded bg-slate-100 text-slate-600 dark:bg-navy-800 dark:text-slate-300 font-medium hover:opacity-80">Clear All</button>
+        <button onclick="toggleNotif()" class="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+    <div id="notif-list" class="flex-1 overflow-y-auto text-xs text-slate-500 dark:text-slate-400 space-y-2">
+      <p class="text-center py-8">Fetching notification ledger...</p>
+    </div>
+  </div>
+
+
+  <div id="page-landing" class="page active pt-16">
+    <div class="relative min-h-[85vh] flex items-center justify-center text-center px-4 overflow-hidden bg-gradient-to-b from-navy-900 via-navy-950 to-slate-50 dark:to-navy-950 text-white">
+      <div class="relative z-10 max-w-3xl mx-auto py-12">
+        <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Federal Republic of Nigeria Core Platform
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none mb-6">
+          Maximize Scholastic Potential <br class="hidden sm:inline"> via <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Adaptive AI Intelligence</span>
+        </h1>
+        <p class="text-base sm:text-lg text-slate-300 max-w-xl mx-auto mb-8 font-light leading-relaxed">
+          Integrated curriculum frameworks, simulated performance diagnostics, and synthetic conversational guidance engineered from Nursery modules to Advanced Level university preparation.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <button onclick="go('page-signup')" class="w-full sm:w-auto px-8 py-3.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2">Initiate Setup Sequence <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          <button onclick="go('page-login')" class="w-full sm:w-auto px-8 py-3.5 bg-navy-800 border border-navy-700 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all">Account Verification Login</button>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mt-16 border-t border-navy-800 pt-8 text-center">
+          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">10,000+</div><div class="text-xs text-slate-400 font-medium mt-1">Active Profiles</div></div>
+          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">26 Unique</div><div class="text-xs text-slate-400 font-medium mt-1">Discipline Branches</div></div>
+          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">4 Framework</div><div class="text-xs text-slate-400 font-medium mt-1">AI Node Matrix</div></div>
+          <div><div class="text-2xl sm:text-3xl font-bold text-white tracking-tight">6 Vertical</div><div class="text-xs text-slate-400 font-medium mt-1">Instruction Tiers</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-20">
+      <h2 class="text-center text-2xl lg:text-3xl font-bold tracking-tight mb-4">Core Ecosystem Vectors</h2>
+      <p class="text-center text-slate-500 dark:text-slate-400 max-w-md mx-auto text-sm mb-12">Engineered layouts using modern crisp corners and clear spacing metrics.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 mb-4"><i data-lucide="cpu" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Synthetic Instruction Nodes</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Dynamically customized textual instruction matching localized student metrics and specific curriculum specifications.</p>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 mb-4"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Automated Evaluation Matrices</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Algorithmic generation of unique structural examinations with detailed validation pathways for each answer tier.</p>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500 mb-4"><i data-lucide="message-square-text" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Conversational AI Sandbox</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Continuous accessibility framework allowing natural voice or code-based interrogation of curriculum topics.</p>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 mb-4"><i data-lucide="history" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Historical Exams Registry</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Full breakdown matrices for past national test parameters, including certified historical inputs for JAMB, WAEC, and NECO platforms.</p>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-500 mb-4"><i data-lucide="smile" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Primary Gamification Matrix</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Cognitive visual puzzles mapped directly to youth skill verification tracks to ensure logic formulation remains sound.</p>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm transition-all hover:shadow-md">
+          <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-600 mb-4"><i data-lucide="medal" class="w-5 h-5"></i></div>
+          <h3 class="font-semibold text-lg mb-2">Competitive Tier Rankings</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">National level computational ledger sorting performance scores across participating regional institutions.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-200 bg-slate-100 dark:bg-navy-900 dark:border-navy-800 text-center py-12 px-4 text-xs text-slate-500 dark:text-slate-400">
+      <div class="font-bold text-slate-800 dark:text-white tracking-widest text-sm mb-2">OX-BRIDGE</div>
+      <p class="mb-1">Ecosystem Infrastructure Architecture: Goodnews Solomon</p>
+      <p class="text-blue-500 font-medium">Ox-Bridge Technology Group Corporation</p>
+      <p class="mt-4 text-[10px] uppercase tracking-widest">&copy; 2026 Ox-Bridge Learning Hub. All rights reserved.</p>
+    </footer>
+  </div>
+
+
+  <div id="page-signup" class="page pt-24 pb-12">
+    <div class="max-w-md mx-auto px-4">
+      <button onclick="go('page-landing')" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 mb-4 transition-colors font-medium"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Abort Verification Sequence</button>
+      
+      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl shadow-sm">
+        <div class="text-center mb-6">
+          <div class="font-black tracking-widest text-xl text-blue-500">OX-BRIDGE</div>
+          <h2 class="text-xl font-bold tracking-tight mt-3">Establish Profile Parameters</h2>
+          <p class="text-xs text-slate-400 mt-1">Connect profile identifier metrics to regional learning hubs.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">User Identity Token</label>
+            <input id="su-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="text" placeholder="Minimum 3 characters" autocomplete="username">
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Communication Route Address</label>
+            <input id="su-email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="email" placeholder="name@domain.com" autocomplete="email">
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Secret Keyphrase Matrix</label>
+            <div class="relative">
+              <input id="su-pass" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Minimum 6 indices" autocomplete="new-password">
+              <button onclick="togglePwd('su-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Validate Keyphrase Vector</label>
+            <div class="relative">
+              <input id="su-conf" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Match authorization string" autocomplete="new-password">
+              <button onclick="togglePwd('su-conf', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+
+          <div id="su-err" class="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-xs font-medium hidden dark:bg-rose-950/20 dark:border-rose-900/50 dark:text-rose-400"></div>
+
+          <button onclick="doSignup()" id="su-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Compile Security File</button>
+        </div>
+
+        <p class="text-center text-xs text-slate-400 mt-6">
+          Pre-registered account localized? <span onclick="go('page-login')" class="text-blue-500 cursor-pointer hover:underline font-medium">Verify login data &rarr;</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="page-login" class="page pt-24 pb-12">
+    <div class="max-w-md mx-auto px-4">
+      <button onclick="go('page-landing')" class="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-blue-500 mb-4 transition-colors font-medium"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Abort Login Pipeline</button>
+      
+      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl shadow-sm" id="login-card">
+        <div class="text-center mb-6">
+          <div class="font-black tracking-widest text-xl text-blue-500">OX-BRIDGE</div>
+          <h2 class="text-xl font-bold tracking-tight mt-3">System Access Verification</h2>
+          <p class="text-xs text-slate-400 mt-1">Provide credential variables to map authorization state.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Account Identity Pointer</label>
+            <input id="li-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="text" placeholder="Username entry token" autocomplete="username">
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Authorization Code</label>
+            <div class="relative">
+              <input id="li-pass" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" type="password" placeholder="Credential characters" autocomplete="current-password">
+              <button onclick="togglePwd('li-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><i data-lucide="eye" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+
+          <div id="li-err" class="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-xs font-medium hidden dark:bg-rose-950/20 dark:border-rose-900/50 dark:text-rose-400"></div>
+
+          <button onclick="doLogin()" id="li-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Authorize Session Link</button>
+        </div>
+
+        <p class="text-center text-xs text-slate-400 mt-6">
+          Missing credential database files? <span onclick="go('page-signup')" class="text-blue-500 cursor-pointer hover:underline font-medium">Build profile data &rarr;</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="page-dashboard" class="page pt-24 pb-12">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h2 id="greeting" class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white"></h2>
+          <p class="text-xs text-slate-400 mt-0.5">Ecosystem parameter validation stable. Select diagnostic target matrix.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
+          <div class="p-3 rounded-lg bg-amber-500/10 text-amber-500"><i data-lucide="star" class="w-5 h-5"></i></div>
+          <div><div id="ds-score" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Aggregated Points</div></div>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
+          <div class="p-3 rounded-lg bg-orange-500/10 text-orange-500"><i data-lucide="zap" class="w-5 h-5"></i></div>
+          <div><div id="ds-streak" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Sequential Days</div></div>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
+          <div class="p-3 rounded-lg bg-purple-500/10 text-purple-500"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
+          <div><div id="ds-quizzes" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Evaluations Finished</div></div>
+        </div>
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl flex items-center gap-4">
+          <div class="p-3 rounded-lg bg-yellow-500/10 text-yellow-600"><i data-lucide="coins" class="w-5 h-5"></i></div>
+          <div><div id="ds-coins" class="text-lg font-bold tracking-tight">—</div><div class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Ecosystem Ledger Balance</div></div>
+        </div>
+      </div>
+
+      <div class="bg-amber-50/50 border border-amber-200/60 dark:bg-amber-950/10 dark:border-amber-900/30 p-6 rounded-xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex-1">
+          <h3 class="text-amber-700 dark:text-amber-400 text-sm font-semibold flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i> Continuous Evaluation Sequence</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl">Resolve current task criteria successfully to unlock point weight variables (+5 rating tokens, +10 standard coins).</p>
+          <div id="dc-area" class="mt-4 text-sm font-medium text-slate-800 dark:text-slate-200">
+            <div class="animate-pulse bg-slate-200 dark:bg-navy-800 h-4 w-2/3 rounded mb-2"></div>
+            <div class="animate-pulse bg-slate-200 dark:bg-navy-800 h-10 w-full rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="forward" class="w-4 h-4"></i> Fast Instruction Routing</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div onclick="openLearn('Mathematics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3"><i data-lucide="binary" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">Mathematics</span>
+            </div>
+            <div onclick="openLearn('English Language','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3"><i data-lucide="languages" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">English Lang.</span>
+            </div>
+            <div onclick="openLearn('Biology','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-teal-500/10 text-teal-500 flex items-center justify-center mb-3"><i data-lucide="microscope" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">Biology Science</span>
+            </div>
+            <div onclick="openLearn('Physics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-3"><i data-lucide="atom" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">Physics Theory</span>
+            </div>
+            <div onclick="openLearn('Chemistry','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-pink-500/10 text-pink-500 flex items-center justify-center mb-3"><i data-lucide="flask-conical" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">Chemistry Lab</span>
+            </div>
+            <div onclick="openLearn('Economics','SSS')" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-4 rounded-xl cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-all text-center">
+              <div class="w-8 h-8 mx-auto rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center mb-3"><i data-lucide="line-chart" class="w-4 h-4"></i></div>
+              <span class="text-xs font-semibold">Economics Map</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="award" class="w-4 h-4"></i> Credentials Log</h3>
+          <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-5 rounded-xl">
+            <div id="ds-badges" class="flex flex-wrap gap-2">
+              <div class="bg-slate-100 dark:bg-navy-950 w-12 h-12 rounded-lg animate-pulse"></div>
+              <div class="bg-slate-100 dark:bg-navy-950 w-12 h-12 rounded-lg animate-pulse"></div>
+            </div>
+            <button onclick="go('page-profile')" class="w-full text-center mt-6 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 transition-colors">Access Profile Badge Vault</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="page-subjects" class="page pt-24 pb-12">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2.5"><i data-lucide="book-open" class="w-6 h-6 text-blue-500"></i> Course Management System</h2>
+        <p class="text-xs text-slate-400 mt-1">Select structural instructional criteria metrics by tier to trigger content engines.</p>
+      </div>
+
+      <div class="flex flex-wrap gap-1.5 border-b border-slate-200 dark:border-navy-800 pb-4 mb-6" id="level-tabs"></div>
+      
+      <div id="subjects-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+    </div>
+  </div>
+
+
+  <div id="page-learn" class="page pt-24 pb-12">
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-6">
+        <button onclick="go('page-subjects')" class="p-2 border border-slate-200 dark:border-navy-800 rounded-lg hover:bg-slate-100 dark:hover:bg-navy-900 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>
+        <div>
+          <h2 class="text-xl font-bold tracking-tight">AI Instruction Matrix</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Automated prompt alignment configuration core.</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl space-y-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Instruction Theme Matrix</label>
+            <input id="l-topic" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Chemical Equilibrium">
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Discipline Vector Group</label>
+            <input id="l-subj" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Chemistry">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Dynamic Vertical</label>
+          <select id="l-level" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors">
+            <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
+          </select>
+        </div>
+        <button onclick="doLearn()" id="l-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"><i data-lucide="cpu" class="w-4 h-4"></i> Execute Synthetic Learning Assembly</button>
+      </div>
+
+      <div id="l-loading" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-12 rounded-xl text-center hidden">
+        <div class="w-8 h-8 border-2 border-slate-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-sm font-medium">Assembling logic parameters down to structural variables...</p>
+      </div>
+
+      <div id="l-result" class="hidden">
+        <div class="bg-white border-2 border-blue-500/30 dark:bg-navy-900 p-6 rounded-xl shadow-sm">
+          <h3 id="l-title" class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-4 tracking-tight"></h3>
+          <div id="l-text" class="text-sm leading-relaxed whitespace-pre-wrap text-slate-700 dark:text-slate-300 font-normal"></div>
+          
+          <div class="flex flex-wrap gap-2 border-t border-slate-100 dark:border-navy-800 pt-6 mt-6">
+            <button onclick="logStudy()" class="px-4 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 flex items-center gap-1.5"><i data-lucide="save" class="w-3.5 h-3.5"></i> Log Study Matrix</button>
+            <button onclick="goQuizFromLearn()" class="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-1.5 shadow-sm"><i data-lucide="brain-circuit" class="w-3.5 h-3.5"></i> Initialize Diagnostic Quiz</button>
+            <button onclick="go('page-aichat')" class="px-4 py-2 bg-slate-100 text-slate-700 dark:bg-navy-800 dark:text-slate-300 text-xs font-semibold rounded-lg hover:opacity-90 flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Run Deep Cross Examination</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="page-quiz" class="page pt-24 pb-12">
+    <div class="max-w-2xl mx-auto px-4">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold tracking-tight flex items-center gap-2.5"><i data-lucide="brain-circuit" class="w-6 h-6 text-blue-500"></i> Performance Evaluation Block</h2>
+        <p class="text-xs text-slate-400 mt-1">Real-time evaluation generated to map comprehension variables.</p>
+      </div>
+
+      <div id="qz-setup" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Discipline</label>
+            <input id="qz-subj" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Physics">
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Tier Matrix</label>
+            <select id="qz-level" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors">
+              <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">Target Variable Subsector</label>
+            <input id="qz-topic" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 dark:bg-navy-950 dark:border-navy-800 dark:text-slate-100 focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Wave Mechanics">
+          </div>
+        </div>
+        <button onclick="startQuiz()" id="qz-btn" class="w-full py-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"><i data-lucide="play" class="w-4 h-4"></i> Trigger Array Validation Run</button>
+      </div>
+
+      <div id="qz-active" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-navy-800 pb-3">
+          <div class="text-sm font-bold tracking-tight text-blue-500" id="qz-counter">Processing item index 1/5</div>
+          <div class="flex items-center gap-2 text-xs font-semibold">
+            <div class="px-2.5 py-1 bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-md flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 text-amber-500"></i> <span id="qz-live">0</span></div>
+            <div class="px-2.5 py-1 bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-md flex items-center gap-1 text-slate-500"><i data-lucide="clock" class="w-3.5 h-3.5"></i> <span id="qz-time">30</span>s</div>
+          </div>
+        </div>
+
+        <div class="w-full bg-slate-200 dark:bg-navy-800 h-1.5 rounded-full overflow-hidden">
+          <div id="timer-fill" class="bg-blue-500 h-full w-full transition-all duration-1000 linear"></div>
+        </div>
+
+        <div class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-6 rounded-xl shadow-sm">
+          <p id="qz-q" class="text-base font-semibold leading-relaxed text-slate-800 dark:text-slate-100 mb-6"></p>
+          <div id="qz-opts" class="space-y-2.5"></div>
+          
+          <div id="qz-expl" class="p-4 bg-blue-50/50 border-l-4 border-blue-500 rounded-r-xl text-xs leading-relaxed text-slate-600 hidden dark:bg-navy-950/40 dark:text-slate-400 mt-4"></div>
+          <button onclick="nextQ()" id="qz-next" class="px-6 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors hidden mt-4 shadow-sm">Advance Matrix Index &rarr;</button>
+        </div>
+      </div>
+
+      <div id="qz-results" class="bg-white border border-slate-200 dark:bg-navy-900 dark:border-navy-800 p-8 rounded-xl text-center hidden">
+        <div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
+        <h2 id="qz-final" class="text-3xl font-extrabold tracking-tight mb-2 text-slate-900 dark:text-white"></h2>
+        <p id="qz-msg" class="text-xs text-slate-400 max-w-sm mx-auto mb-6"></p>
+        <div id="qz-new-badges" class="mb-4"></div>
+        
+        <div class="flex items-center justify-center gap-2">
+          <button onclick="retakeQuiz()" class="px-5 py-2 border border-slate-200 dark:border-navy-800 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-navy-950 transition-colors">Re-Run Evaluation Array</button>
+          <button onclick="go('page-leaderboard')" class="px-5 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Commit Metrics To Board</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker Registered Successfully!', reg))
-          .catch(err => console.error('Service Worker Registration Failed!', err));
-      });
+    // System dynamic triggers for dark mode toggle execution
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Intercept default script loader to refresh vector definitions automatically 
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+      
+      // Simulate original loader teardown for UI visual clarity
+      setTimeout(() => {
+        const loader = document.getElementById('app-loading');
+        if(loader) loader.style.display = 'none';
+        const navBar = document.getElementById('navbar');
+        if(navBar) navBar.style.display = 'flex';
+      }, 800);
+    });
+
+    // Patch for dynamic views to ensure icons populate on generated nodes
+    const originalGo = window.go || function(){};
+    window.go = function(pageId) {
+      originalGo(pageId);
+      setTimeout(() => { if(window.lucide) window.lucide.createIcons(); }, 50);
     }
   </script>
 </body>
