@@ -665,6 +665,53 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
   .grid2,.grid3 { grid-template-columns:1fr !important; }
 }
 .show-m { display:none; }
+
+/* ══════════════════════════════════════════════
+   SEARCH RESULTS
+══════════════════════════════════════════════ */
+.search-result {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:18px; margin-bottom:12px;
+  cursor:pointer; transition:border-color .2s, box-shadow .2s, transform .2s;
+}
+.search-result:hover {
+  border-color:var(--accent); box-shadow:var(--shadow-md); transform:translateY(-2px);
+}
+.search-result a {
+  color:var(--accent); text-decoration:none; font-size:14px; font-weight:700; line-height:1.5;
+}
+.search-result a:hover { text-decoration:underline; }
+
+/* ══════════════════════════════════════════════
+   PAGE ENTRY ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes slideRight { from{opacity:0;transform:translateX(-18px)} to{opacity:1;transform:translateX(0)} }
+@keyframes scaleIn  { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+
+.page.active { animation:fadeUp .32s cubic-bezier(.22,1,.36,1) forwards; }
+
+/* Stagger cards on dashboard / subjects */
+.card            { animation:scaleIn .28s cubic-bezier(.22,1,.36,1) both; }
+.feature-card    { animation:fadeUp  .32s cubic-bezier(.22,1,.36,1) both; }
+.stat-card       { animation:scaleIn .28s cubic-bezier(.22,1,.36,1) both; }
+.subject-card    { animation:fadeUp  .28s cubic-bezier(.22,1,.36,1) both; }
+.search-result   { animation:slideRight .22s cubic-bezier(.22,1,.36,1) both; }
+.lb-row          { animation:fadeUp .22s cubic-bezier(.22,1,.36,1) both; }
+.badge-card      { animation:scaleIn .25s cubic-bezier(.22,1,.36,1) both; }
+.chat-msg        { animation:fadeUp .22s cubic-bezier(.22,1,.36,1) both; }
+.kids-card       { animation:scaleIn .28s cubic-bezier(.22,1,.36,1) both; }
+.quick-card      { animation:scaleIn .25s cubic-bezier(.22,1,.36,1) both; }
+.hero-stat       { animation:fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
+
+/* Hero stagger */
+.hero-inner > * { animation:fadeUp .5s cubic-bezier(.22,1,.36,1) both; }
+.hero-inner > :nth-child(1) { animation-delay:.05s; }
+.hero-inner > :nth-child(2) { animation-delay:.12s; }
+.hero-inner > :nth-child(3) { animation-delay:.19s; }
+.hero-inner > :nth-child(4) { animation-delay:.26s; }
+.hero-inner > :nth-child(5) { animation-delay:.33s; }
 </style>
 </head>
 <body>
@@ -1266,39 +1313,67 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
 <!-- ══════════════════════════════════════════════
      AI CHAT
 ══════════════════════════════════════════════ -->
-<div id="page-aichat" class="page">
-  <div class="pc" style="max-width:750px;">
-    <div class="sh">AI Chat Space</div>
-    <p class="sh-sub">Ask the Ox-Bridge AI tutor anything — it remembers your conversation</p>
+<div id="page-aichat" class="page" style="padding-bottom:0;">
+  <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;height:100vh;padding-top:62px;">
 
-    <div class="card" style="margin-bottom:16px;">
-      <div class="grid3">
-        <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Subject</label>
-          <input id="ac-subj" class="inp" style="margin:0;" value="General" placeholder="e.g. Biology">
+    <!-- Professor header bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:13px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-light));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
         </div>
         <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Level</label>
-          <select id="ac-level" class="inp" style="margin:0;"><option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option></select>
+          <div style="font-weight:700;font-size:14px;font-family:'Lora',serif;">Professor Ox-Bridge</div>
+          <div style="font-size:11px;color:var(--teal);display:flex;align-items:center;gap:4px;margin-top:1px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--teal);display:inline-block;"></span>
+            Available · All subjects · WAEC · JAMB
+          </div>
         </div>
-        <div style="display:flex;align-items:flex-end;">
-          <button onclick="clearChatHistory()" class="btn btn-danger" style="padding:10px 14px;font-size:12px;width:100%;">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-            Clear Chat
-          </button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:11px;color:var(--muted);text-align:right;">
+          <div id="session-time" style="font-weight:600;font-size:13px;color:var(--text);">00:00</div>
+          <div><span id="q-count">0</span> questions</div>
         </div>
+        <button onclick="clearChatHistory()" title="New session" style="background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--danger)';this.style.color='var(--danger)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="chat-box" id="chat-box" style="margin-bottom:14px;"></div>
-      <div style="display:flex;gap:8px;">
-        <input id="ac-msg" class="inp" style="margin:0;flex:1;" placeholder="Ask anything about your studies...">
-        <button onclick="sendChat()" class="btn btn-primary" style="padding:11px 18px;">
+    <!-- Context selectors — compact inline -->
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;flex-wrap:wrap;">
+      <span style="font-size:11px;color:var(--muted);font-weight:600;">Context:</span>
+      <input id="ac-subj" style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none;width:120px;" value="General" placeholder="Subject">
+      <select id="ac-level" style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none;cursor:pointer;">
+        <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
+      </select>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-left:4px;">
+        <span onclick="quickQ('Explain photosynthesis step by step')" style="font-size:10px;padding:3px 9px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Photosynthesis</span>
+        <span onclick="quickQ('Explain quadratic equations with examples')" style="font-size:10px;padding:3px 9px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Quadratic Eq.</span>
+        <span onclick="quickQ('How does the human digestive system work?')" style="font-size:10px;padding:3px 9px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Digestive System</span>
+        <span onclick="quickQ('What are the main themes in Things Fall Apart?')" style="font-size:10px;padding:3px 9px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Things Fall Apart</span>
+        <span onclick="quickQ('Explain supply and demand in economics')" style="font-size:10px;padding:3px 9px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Supply & Demand</span>
+      </div>
+    </div>
+
+    <!-- Chat messages -->
+    <div id="chat-box" style="flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:14px;background:var(--bg);">
+      <div class="chat-msg ai">
+        <div class="role">PROFESSOR OX-BRIDGE</div>
+        <div>Good day! I am Professor Ox-Bridge, your dedicated AI academic tutor. I have extensive knowledge across all subjects in the Nigerian curriculum — from Primary to University level.<br><br>Whether you need help understanding a difficult concept, preparing for WAEC or JAMB, or simply want to deepen your knowledge, I am here to guide you. What shall we explore today?</div>
+      </div>
+    </div>
+
+    <!-- Input bar -->
+    <div style="padding:14px 20px;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0;">
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <input id="ac-msg" class="inp" style="margin:0;flex:1;border-radius:22px;padding:11px 18px;" placeholder="Ask the Professor anything...">
+        <button onclick="sendChat()" class="btn btn-primary" style="border-radius:50%;width:44px;height:44px;padding:0;flex-shrink:0;">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-      <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Powered by Ox-Bridge Technology · Nigeria</p>
+      <p style="font-size:11px;color:var(--muted2);margin-top:8px;padding-left:4px;">Powered by Ox-Bridge Technology · Nigeria</p>
     </div>
   </div>
 </div>
@@ -1532,6 +1607,68 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
 </div>
 
 <!-- ══════════════════════════════════════════════
+     WEB SEARCH
+══════════════════════════════════════════════ -->
+<div id="page-search" class="page">
+  <div class="pc" style="max-width:800px;">
+    <div class="sh">Smart Search</div>
+    <p class="sh-sub">Search the web, YouTube, and educational resources</p>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <input id="s-query" class="inp" style="margin:0;flex:1;min-width:200px;border-radius:22px;padding:12px 20px;" placeholder="Search anything e.g. 'photosynthesis explained', 'WAEC 2024'...">
+        <button onclick="doSearch()" id="s-btn" class="btn btn-primary" style="border-radius:22px;padding:12px 24px;">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search
+        </button>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:11px;color:var(--muted);font-weight:600;">Quick:</span>
+        <span onclick="quickSearch('WAEC past questions 2024')" style="font-size:11px;padding:4px 11px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">WAEC 2024</span>
+        <span onclick="quickSearch('JAMB UTME preparation tips')" style="font-size:11px;padding:4px 11px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">JAMB Tips</span>
+        <span onclick="quickSearch('Nigeria university admission 2026')" style="font-size:11px;padding:4px 11px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Admission 2026</span>
+        <span onclick="quickSearch('times table for kids')" style="font-size:11px;padding:4px 11px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Times Tables</span>
+        <span onclick="quickSearch('Nigeria current affairs 2026')" style="font-size:11px;padding:4px 11px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .18s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">Current Affairs</span>
+      </div>
+    </div>
+
+    <!-- YouTube section -->
+    <div class="card" style="margin-bottom:20px;border-color:rgba(220,38,38,.2);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;border-radius:var(--radius-sm);background:rgba(220,38,38,.1);display:flex;align-items:center;justify-content:center;">
+          <svg width="14" height="14" fill="#dc2626" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:13px;color:var(--danger);">YouTube Videos</div>
+          <div style="font-size:11px;color:var(--muted);">Find video lessons and tutorials</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="yt-query" class="inp" style="margin:0;flex:1;min-width:160px;border-radius:22px;" placeholder="e.g. quadratic equations tutorial...">
+        <button onclick="openYouTube()" class="btn btn-danger" style="border-radius:22px;padding:11px 20px;font-size:13px;">Find Videos</button>
+      </div>
+    </div>
+
+    <div id="s-loading" style="display:none;text-align:center;padding:40px;">
+      <div class="spinner" style="margin:0 auto 14px;"></div>
+      <p style="color:var(--muted);font-size:13px;">Searching the web...</p>
+    </div>
+
+    <div id="s-results" style="display:none;">
+      <h3 style="font-family:'Lora',serif;margin-bottom:16px;font-size:1rem;" id="s-results-title">Search Results</h3>
+      <div id="s-results-list"></div>
+    </div>
+
+    <div id="s-empty" style="display:none;" class="card" style="text-align:center;padding:40px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+        <svg width="22" height="22" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <p style="color:var(--muted);font-size:13px;">No results found. Try a different search term.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
      JAVASCRIPT — ALL ORIGINAL LOGIC PRESERVED
 ══════════════════════════════════════════════ -->
 <script>
@@ -1547,6 +1684,7 @@ let qSubj="", qLevel="", qTopic="";
 
 // OTHER STATE
 let pqExam="WAEC", kidsLevel="Primary", ws=null;
+let sessionInterval=null, questionCount=0;
 
 // ============================================================
 // THEME TOGGLE
@@ -1594,6 +1732,8 @@ window.onload = async function() {
   document.getElementById("su-conf").addEventListener("keydown", e => { if(e.key==="Enter") doSignup(); });
   document.getElementById("ac-msg").addEventListener("keydown",  e => { if(e.key==="Enter") sendChat(); });
   document.getElementById("cl-inp").addEventListener("keydown",  e => { if(e.key==="Enter") sendMsg(); });
+  document.getElementById("l-topic").addEventListener("keydown", e => { if(e.key==="Enter") doLearn(); });
+  document.getElementById("s-query").addEventListener("keydown", e => { if(e.key==="Enter") doSearch(); });
   checkBreakpoint();
   window.addEventListener("resize", checkBreakpoint);
 };
@@ -1631,7 +1771,7 @@ function go(id){
   if(id==="page-leaderboard") loadLeaderboard();
   if(id==="page-profile")     loadProfile();
   if(id==="page-subjects")    initSubjects();
-  if(id==="page-aichat")      loadChatHistory();
+  if(id==="page-aichat")      { loadChatHistory(); startSession(); }
   closeMob();
 }
 function nav(id){ go(id); }
@@ -1851,19 +1991,46 @@ async function doLearn(){
   const subj=document.getElementById("l-subj").value.trim()||"General";
   const level=document.getElementById("l-level").value;
   if(!topic) return toast("Please enter a topic to learn","warning");
-  document.getElementById("l-result").style.display="none";
-  document.getElementById("l-loading").style.display="block";
+
+  const box=document.getElementById("tutor-box");
+  // User message bubble
+  const userDiv=document.createElement("div");
+  userDiv.className="chat-msg user";
+  userDiv.innerHTML=`<div class="role">${(CU||"YOU").toUpperCase()}</div><div>Teach me about: <strong>${topic}</strong></div>`;
+  box.appendChild(userDiv); box.scrollTop=box.scrollHeight;
+
+  // Typing indicator
+  const typing=document.createElement("div");
+  typing.className="chat-msg ai"; typing.id="l-typing";
+  typing.innerHTML=`<div class="role">OX-BRIDGE TUTOR</div><div style="animation:pulse 1s infinite;color:var(--muted);">Preparing your lesson on <em>${topic}</em>...</div>`;
+  box.appendChild(typing); box.scrollTop=box.scrollHeight;
+
+  document.getElementById("l-topic").value="";
+  const loadBar=document.getElementById("l-loading-bar");
+  if(loadBar) loadBar.style.display="flex";
   setBtnLoad("l-btn",true,"Teaching...");
   try{
     const r=await fetch(`${API}/learn/${encodeURIComponent(topic)}?username=${encodeURIComponent(CU)}&level=${encodeURIComponent(level)}&subject=${encodeURIComponent(subj)}`);
     const d=await r.json();
-    document.getElementById("l-loading").style.display="none";
+    document.getElementById("l-typing")?.remove();
+    if(loadBar) loadBar.style.display="none";
     if(r.ok){
-      document.getElementById("l-title").textContent=`${topic} — ${subj} (${level})`;
-      document.getElementById("l-text").textContent=d.lesson;
-      document.getElementById("l-result").style.display="block";
+      const aiDiv=document.createElement("div");
+      aiDiv.className="chat-msg ai";
+      aiDiv.innerHTML=`<div class="role">OX-BRIDGE TUTOR</div>
+        <div style="font-weight:600;color:var(--teal);margin-bottom:10px;">${topic} — ${subj} (${level})</div>
+        <div style="line-height:1.85;font-size:13.5px;">${(d.lesson||"").replace(/\n/g,"<br>")}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+          <button onclick="goQuizFromLearn('${topic.replace(/'/g,"\\'")}','${subj.replace(/'/g,"\\'")}','${level}')" class="btn btn-primary" style="font-size:12px;padding:7px 14px;">Take Quiz on This</button>
+          <button onclick="logStudy()" class="btn btn-ghost" style="font-size:12px;padding:7px 14px;">Log Study Session</button>
+        </div>`;
+      box.appendChild(aiDiv); box.scrollTop=box.scrollHeight;
     }else{ toast("Could not load lesson. Try again.","error"); }
-  }catch(e){ document.getElementById("l-loading").style.display="none"; toast("Connection error","error"); }
+  }catch(e){
+    document.getElementById("l-typing")?.remove();
+    if(loadBar) loadBar.style.display="none";
+    toast("Connection error","error");
+  }
   finally{ setBtnLoad("l-btn",false); }
 }
 
@@ -1878,10 +2045,13 @@ async function logStudy(){
   }catch(e){ toast("Could not log session","error"); }
 }
 
-function goQuizFromLearn(){
-  document.getElementById("qz-topic").value=document.getElementById("l-topic").value;
-  document.getElementById("qz-subj").value=document.getElementById("l-subj").value;
-  document.getElementById("qz-level").value=document.getElementById("l-level").value;
+function goQuizFromLearn(topic,subj,level){
+  if(topic) document.getElementById("qz-topic").value=topic;
+  else document.getElementById("qz-topic").value=document.getElementById("l-topic")?.value||"";
+  if(subj) document.getElementById("qz-subj").value=subj;
+  else document.getElementById("qz-subj").value=document.getElementById("l-subj")?.value||"";
+  if(level) document.getElementById("qz-level").value=level;
+  else document.getElementById("qz-level").value=document.getElementById("l-level")?.value||"SSS";
   go("page-quiz");
 }
 
@@ -1998,7 +2168,7 @@ function appendChat(role,text){
   const box=document.getElementById("chat-box");
   const div=document.createElement("div");
   div.className="chat-msg "+(role==="user"?"user":"ai");
-  div.innerHTML=`<div class="role">${role==="user"?"You":"Ox-Bridge AI"}</div><div>${text}</div>`;
+  div.innerHTML=`<div class="role">${role==="user"?(CU||"YOU").toUpperCase():"PROFESSOR OX-BRIDGE"}</div><div>${text.replace(/\n/g,"<br>")}</div>`;
   box.appendChild(div);
   box.scrollTop=box.scrollHeight;
 }
@@ -2028,7 +2198,7 @@ async function sendChat(){
 
   const typing=document.createElement("div");
   typing.className="chat-msg ai"; typing.id="typing";
-  typing.innerHTML=`<div class="role">Ox-Bridge AI</div><div style="animation:pulse 1s infinite;color:var(--muted);">Thinking...</div>`;
+  typing.innerHTML=`<div class="role">PROFESSOR OX-BRIDGE</div><div style="animation:pulse 1s infinite;color:var(--muted);">The Professor is thinking...</div>`;
   document.getElementById("chat-box").appendChild(typing);
   document.getElementById("chat-box").scrollTop=99999;
 
@@ -2044,11 +2214,12 @@ async function sendChat(){
 }
 
 async function clearChatHistory(){
-  if(!confirm("Clear all chat history?")) return;
+  if(!confirm("Start a new session? This will clear your chat history.")) return;
   try{
     await fetch(`${API}/ai/chat/clear`,{method:"POST",headers:hdrs(),body:JSON.stringify({username:CU})});
-    document.getElementById("chat-box").innerHTML=`<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px;">Chat cleared! Ask me anything.</div>`;
-    toast("Chat history cleared","success");
+    document.getElementById("chat-box").innerHTML=`<div class="chat-msg ai"><div class="role">PROFESSOR OX-BRIDGE</div><div>Good day! A new session has begun. What shall we explore today?</div></div>`;
+    questionCount=0; const qEl=document.getElementById("q-count"); if(qEl) qEl.textContent=0;
+    startSession(); toast("New session started","success");
   }catch(e){ toast("Error clearing chat","error"); }
 }
 
@@ -2388,6 +2559,76 @@ function makeParticles(){
     p.style.cssText=`left:${Math.random()*100}vw;width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;animation-duration:${Math.random()*20+18}s;animation-delay:${Math.random()*12}s;opacity:${Math.random()*.4+.15};`;
     c.appendChild(p);
   }
+}
+
+// ============================================================
+// SESSION TIMER & QUICK QUESTIONS
+// ============================================================
+function startSession(){
+  if(sessionInterval) clearInterval(sessionInterval);
+  const start=Date.now();
+  questionCount=0;
+  const qEl=document.getElementById("q-count");
+  if(qEl) qEl.textContent=0;
+  sessionInterval=setInterval(()=>{
+    const e=Math.floor((Date.now()-start)/1000);
+    const m=Math.floor(e/60).toString().padStart(2,"0");
+    const s=(e%60).toString().padStart(2,"0");
+    const el=document.getElementById("session-time");
+    if(el) el.textContent=`${m}:${s}`;
+  },1000);
+}
+function quickQ(msg){ document.getElementById("ac-msg").value=msg; sendChat(); }
+
+// ============================================================
+// WEB SEARCH
+// ============================================================
+function quickSearch(q){ document.getElementById("s-query").value=q; doSearch(); }
+function openYouTube(){
+  const q=document.getElementById("yt-query").value.trim();
+  if(!q) return toast("Please enter a search term","warning");
+  window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(q+" Nigeria education")}`, "_blank");
+  toast("Opening YouTube...","info");
+}
+async function doSearch(){
+  const query=document.getElementById("s-query").value.trim();
+  if(!query) return toast("Please enter a search term","warning");
+  document.getElementById("s-results").style.display="none";
+  document.getElementById("s-empty").style.display="none";
+  document.getElementById("s-loading").style.display="block";
+  setBtnLoad("s-btn",true,"Searching...");
+  try{
+    const r=await fetch(`${API}/search/web/${encodeURIComponent(query)}`);
+    const d=await r.json();
+    document.getElementById("s-loading").style.display="none";
+    if(d.error||!d.results||d.results.length===0){
+      document.getElementById("s-empty").style.display="block"; return;
+    }
+    document.getElementById("s-results-title").textContent=`Results for "${query}"`;
+    document.getElementById("s-results-list").innerHTML=d.results.map(res=>`
+      <div class="search-result" onclick="window.open('${res.url}','_blank')">
+        <a href="${res.url}" target="_blank" onclick="event.stopPropagation()">${res.title}</a>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.65;">${res.snippet}</p>
+        <p style="color:var(--accent);font-size:11px;margin-top:6px;">${res.url.substring(0,60)}${res.url.length>60?"...":""}</p>
+      </div>
+    `).join("")+`
+      <div class="search-result" style="border-color:rgba(220,38,38,.25);" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(query+" tutorial")}','_blank')">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:40px;height:40px;border-radius:var(--radius-sm);background:rgba(220,38,38,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" fill="#dc2626" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;color:var(--danger);font-size:14px;">Watch on YouTube</div>
+            <div style="color:var(--muted);font-size:12.5px;margin-top:3px;">Find video explanations for "${query}"</div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById("s-results").style.display="block";
+  }catch(e){
+    document.getElementById("s-loading").style.display="none";
+    toast("Search failed. Check your internet.","error");
+  }finally{ setBtnLoad("s-btn",false); }
 }
 
 console.log("%cOx-Bridge Learning Hub v2.0 | Ox-Bridge Technology | Built by Goodnews Solomon","color:#1d4ed8;font-size:13px;font-weight:bold;");
