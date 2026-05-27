@@ -1,238 +1,291 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Ox-Bridge • Learn Smarter</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Fredoka+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;
-  --border:#2a2a3a;--accent:#6c63ff;--accent2:#00e5a0;
-  --danger:#ff4f6a;--warn:#ffb830;--text:#e8e8f0;--muted:#6b6b80;--ng:#008751;
+:root[data-theme="light"] {
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface2: #F1F5F9;
+  --border: #E2E8F0;
+  --primary: #0B192C;
+  --primary-light: #1E3E62;
+  --accent: #2563EB;
+  --text: #0F172A;
+  --muted: #64748B;
+  --success: #16A34A;
+  --danger: #DC2626;
+  --warn: #D97706;
 }
+:root[data-theme="dark"] {
+  --bg: #0B121F;
+  --surface: #111B2D;
+  --surface2: #1E293B;
+  --border: #334155;
+  --primary: #FFFFFF;
+  --primary-light: #F1F5F9;
+  --accent: #3B82F6;
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --success: #22C55E;
+  --danger: #EF4444;
+  --warn: #F59E0B;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
 body{
-  font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);
-  overflow-x:hidden;min-height:100vh;
-  background-image:linear-gradient(rgba(108,99,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,.04) 1px,transparent 1px);
-  background-size:40px 40px;
+  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+  overflow-x:hidden;min-height:100vh;transition:background 0.2s ease, color 0.2s ease;
 }
+code, pre, .mono-text { font-family: 'JetBrains Mono', monospace; }
+
 /* PAGES */
 .page{display:none;min-height:100vh;padding-bottom:80px;}
-.page.active{display:block;animation:fadeIn .35s ease forwards;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-@keyframes floatP{0%{transform:translateY(100vh) scale(.5)}100%{transform:translateY(-100vh) scale(1.2)}}
+.page.active{display:block;animation:fadeIn .3s ease-out forwards;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
 /* NAVBAR */
 .navbar{
-  position:fixed;top:0;left:0;right:0;height:60px;
+  position:fixed;top:0;left:0;right:0;height:65px;
   background:var(--surface);border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;z-index:1000;gap:8px;
+  padding:0 24px;z-index:1000;gap:12px;
 }
 .logo{
-  font-family:'Syne',sans-serif;font-weight:800;font-size:20px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  font-weight:800;font-size:20px;letter-spacing:-0.5px;
+  color:var(--primary);cursor:pointer;white-space:nowrap;flex-shrink:0;
 }
-.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links{display:flex;align-items:center;gap:6px;}
 .nav-link{
-  font-size:12px;cursor:pointer;padding:6px 9px;border-radius:8px;
-  transition:all .2s;font-family:'Syne',sans-serif;font-weight:600;white-space:nowrap;
+  font-size:13px;cursor:pointer;padding:8px 12px;border-radius:6px;
+  color:var(--muted);font-weight:500;white-space:nowrap;transition:all 0.15s ease;
+  display:flex;align-items:center;gap:6px;
 }
-.nav-link:hover{background:var(--surface2);color:var(--accent);}
-.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.nav-link:hover, .nav-link.active{background:var(--surface2);color:var(--primary);}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
 .pill{
-  background:var(--surface2);padding:4px 10px;border-radius:9999px;
-  font-size:12px;display:flex;align-items:center;gap:4px;
-  border:1px solid var(--border);cursor:pointer;white-space:nowrap;
+  background:var(--surface2);padding:6px 12px;border-radius:6px;
+  font-size:13px;display:flex;align-items:center;gap:6px;
+  border:1px solid var(--border);color:var(--text);font-weight:500;cursor:pointer;white-space:nowrap;
 }
 .pill:hover{border-color:var(--accent);}
-.notif-wrap{position:relative;font-size:20px;cursor:pointer;padding:6px;border-radius:50%;transition:background .2s;}
-.notif-wrap:hover{background:var(--surface2);}
-.notif-dot{
-  position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;
-  font-size:9px;width:15px;height:15px;border-radius:50%;
-  display:none;align-items:center;justify-content:center;
+.icon-btn{
+  background:none;border:none;cursor:pointer;padding:8px;border-radius:6px;
+  color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all 0.15s;
 }
+.icon-btn:hover{background:var(--surface2);color:var(--primary);}
+
+.notif-wrap{position:relative;}
+.notif-dot{
+  position:absolute;top:6px;right:6px;background:var(--danger);width:8px;height:8px;border-radius:50%;display:none;
+}
+
 /* BUTTONS */
-.btn{padding:10px 20px;border-radius:12px;font-weight:600;cursor:pointer;transition:all .3s;border:none;font-family:'Syne',sans-serif;font-size:14px;}
-.btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(108,99,255,.3);}
-.btn-outline{background:transparent;border:2px solid var(--accent);color:var(--accent);}
-.btn-outline:hover{background:var(--accent);color:#fff;}
+.btn{
+  padding:10px 18px;border-radius:6px;font-weight:500;cursor:pointer;
+  transition:all .2s ease;border:none;font-family:'Inter',sans-serif;
+  font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-primary{background:var(--accent);color:#ffffff;}
+.btn-primary:hover{background:var(--primary-light);opacity:0.95;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{background:var(--surface2);border-color:var(--muted);}
 .btn-danger{background:var(--danger);color:#fff;}
-.btn-warn{background:var(--warn);color:#000;}
-.btn-green{background:var(--accent2);color:#000;}
-.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important;}
+.btn-warn{background:var(--warn);color:#fff;}
+.btn-green{background:var(--success);color:#fff;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
 /* INPUTS */
 .inp{
-  width:100%;padding:13px 15px;background:var(--surface2);
-  border:1px solid var(--border);border-radius:12px;color:var(--text);
-  font-family:'DM Mono',monospace;font-size:14px;outline:none;
-  transition:border-color .2s;margin-bottom:13px;
+  width:100%;padding:11px 14px;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:14px;outline:none;
+  transition:border-color .15s ease;margin-bottom:12px;
 }
 .inp:focus{border-color:var(--accent);}
 .inp::placeholder{color:var(--muted);}
-select.inp option{background:var(--surface2);}
+select.inp option{background:var(--surface);color:var(--text);}
+
 /* CARDS */
-.card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:20px;transition:border-color .2s;}
-.card-hover:hover{border-color:rgba(108,99,255,.4);cursor:pointer;}
+.card{background:var(--surface);border-radius:8px;border:1px solid var(--border);padding:24px;transition:all 0.2s ease;}
+.card-hover:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.03);cursor:pointer;}
+
 /* SKELETON */
-.skel{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+.skel{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;}
 /* SPINNER */
-.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+.spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;}
+
 /* OPTION BUTTONS */
 .opt{
-  width:100%;text-align:left;padding:13px 16px;background:var(--surface2);
-  border:2px solid var(--border);border-radius:12px;color:var(--text);
-  font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;
-  transition:all .2s;margin-bottom:10px;display:block;
+  width:100%;text-align:left;padding:14px 18px;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;
+  transition:all .15s;margin-bottom:10px;display:block;
 }
-.opt:hover{border-color:var(--accent);background:rgba(108,99,255,.08);}
-.opt.correct{border-color:var(--accent2);background:rgba(0,229,160,.12);color:var(--accent2);}
-.opt.wrong{border-color:var(--danger);background:rgba(255,79,106,.12);color:var(--danger);}
+.opt:hover{border-color:var(--accent);background:var(--surface2);}
+.opt.correct{border-color:var(--success);background:rgba(22,163,74,0.06);color:var(--success);font-weight:600;}
+.opt.wrong{border-color:var(--danger);background:rgba(220,38,38,0.06);color:var(--danger);font-weight:600;}
 .opt:disabled{cursor:not-allowed;}
+
 /* TOAST */
-#toasts{position:fixed;top:70px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:340px;}
+#toasts{position:fixed;top:80px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:340px;}
 .toast{
-  background:var(--surface);border:2px solid;padding:12px 16px;border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;
-  font-size:13px;animation:fadeIn .3s ease;
+  background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);
+  padding:12px 16px;border-radius:6px;box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);animation:fadeIn .25s ease;
 }
+
 /* NOTIF PANEL */
 #notif-panel{
-  position:fixed;top:60px;right:0;width:320px;max-height:calc(100vh - 60px);
+  position:fixed;top:65px;right:0;width:340px;max-height:calc(100vh - 65px);
   background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;
-  z-index:998;transform:translateX(100%);transition:transform .3s ease;padding:16px;
+  z-index:998;transform:translateX(100%);transition:transform .25s cubic-bezier(0.4, 0, 0.2, 1);padding:20px;
 }
 #notif-panel.open{transform:translateX(0);}
+
 /* MOBILE MENU */
 #mob-menu{
-  display:none;position:fixed;top:60px;left:0;right:0;bottom:0;
-  background:rgba(10,10,15,.98);z-index:999;padding:20px;overflow-y:auto;
+  display:none;position:fixed;top:65px;left:0;right:0;bottom:0;
+  background:var(--surface);z-index:999;padding:24px;overflow-y:auto;
 }
 .mob-btn{
-  display:block;width:100%;padding:16px;background:var(--surface);
-  border:1px solid var(--border);border-radius:12px;color:var(--text);
-  font-family:'Syne',sans-serif;font-size:16px;cursor:pointer;
-  text-align:left;margin-bottom:10px;transition:border-color .2s;
+  display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;
+  background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);
+  font-size:15px;font-weight:500;cursor:pointer;text-align:left;margin-bottom:6px;transition:all 0.15s;
 }
-.mob-btn:hover{border-color:var(--accent);}
+.mob-btn:hover{background:var(--surface2);color:var(--primary);}
+
 /* PAGE CONTENT */
-.pc{padding:76px 16px 40px;max-width:1200px;margin:0 auto;}
+.pc{padding:90px 24px 40px;max-width:1200px;margin:0 auto;}
+
 /* HERO */
-.hero{height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
-.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(108,99,255,.6),transparent);animation:floatP 25s linear infinite;}
+.hero{height:85vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+
 /* TIMER BAR */
-#timer-fill{height:6px;border-radius:3px;background:var(--accent2);transition:width 1s linear,background .5s;}
+#timer-fill{height:100%;border-radius:3px;background:var(--accent);transition:width 1s linear;}
+
 /* KIDS */
-.kids-bg{background:linear-gradient(135deg,#1a1040,#2a1b5f);}
-.kids-card{border-radius:20px;padding:24px;cursor:pointer;transition:transform .25s;text-align:center;}
-.kids-card:hover{transform:translateY(-6px);}
+.kids-card{border-radius:12px;padding:24px;cursor:pointer;transition:all .2s;text-align:center;background:var(--surface2);border:1px solid var(--border);}
+.kids-card:hover{transform:translateY(-4px);border-color:var(--accent);}
+
 /* BADGE */
-.badge-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;transition:transform .2s;}
-.badge-card:hover{transform:translateY(-4px);}
+.badge-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;transition:transform .2s;}
+.badge-card:hover{transform:translateY(-2px);}
 .badge-card.locked{opacity:.4;filter:grayscale(1);}
+
 /* CHAT */
-.chat-box{height:360px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;}
-.chat-msg{max-width:78%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.55;}
-.chat-msg.user{background:var(--accent);align-self:flex-end;border-radius:12px 12px 4px 12px;}
-.chat-msg.ai{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:12px 12px 12px 4px;}
-.chat-msg .role{font-size:10px;color:rgba(255,255,255,.6);margin-bottom:3px;}
+.chat-box{height:400px;overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.chat-msg{max-width:80%;padding:12px 16px;border-radius:8px;font-size:14px;line-height:1.6;}
+.chat-msg.user{background:var(--accent);color:#ffffff;align-self:flex-end;border-bottom-right-radius:2px;}
+.chat-msg.ai{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px;}
+.chat-msg .role{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+
 /* APP LOADING */
 #app-loading{position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+
 /* RESPONSIVE */
-@media(max-width:768px){
+@media(max-width:992px){
   .hide-m{display:none!important;}
   .show-m{display:flex!important;}
-  .grid2,.grid3{grid-template-columns:1fr!important;}
+  .grid2, .grid3, .grid4{grid-template-columns:1fr!important;}
 }
 .show-m{display:none;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;}
+.grid4{display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;}
+
 /* ERROR BOX */
-.err-box{color:var(--danger);font-size:13px;padding:10px 13px;background:rgba(255,79,106,.1);border-radius:8px;margin-bottom:12px;display:none;}
+.err-box{color:var(--danger);font-size:13px;padding:12px;background:rgba(220,38,38,0.06);border:1px solid var(--danger);border-radius:6px;margin-bottom:12px;display:none;}
+
 /* TABS */
-.level-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
-.ltab{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;transition:all .2s;}
-.ltab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.level-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;}
+.ltab{padding:8px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer;font-weight:500;transition:all .15s;}
+.ltab.active{background:var(--accent);border-color:var(--accent);color:#ffffff;}
+
 /* SECTION HEADER */
-.sh{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:6px;}
-.sh-sub{color:var(--muted);font-size:13px;margin-bottom:22px;}
+.sh{font-size:1.75rem;font-weight:700;margin-bottom:6px;letter-spacing:-0.5px;color:var(--text);}
+.sh-sub{color:var(--muted);font-size:14px;margin-bottom:24px;}
 </style>
 </head>
 <body>
 
 <div id="app-loading">
-  <div class="logo" style="font-size:28px;">OX-BRIDGE</div>
+  <div class="logo" style="font-size:32px;">OX-BRIDGE</div>
   <div class="spinner"></div>
-  <p style="color:var(--muted);font-size:13px;">Powered by Ox-Bridge Technology</p>
+  <p style="color:var(--muted);font-size:14px;font-weight:500;">Powered by Ox-Bridge Technology</p>
 </div>
 
 <div id="toasts"></div>
 
 <nav class="navbar" id="navbar" style="display:none;">
-  <div style="display:flex;align-items:center;gap:10px;">
+  <div style="display:flex;align-items:center;gap:12px;">
     <div class="logo" onclick="goHome()">OX-BRIDGE</div>
-    <span style="font-size:11px;color:var(--muted);" class="hide-m">Learning Hub</span>
+    <span style="font-size:12px;color:var(--muted);font-weight:500;background:var(--surface2);padding:2px 8px;border-radius:4px;" class="hide-m">Learning Hub</span>
   </div>
   <div class="nav-links hide-m" id="desk-nav">
-    <span class="nav-link" onclick="go('page-dashboard')">🏠</span>
-    <span class="nav-link" onclick="go('page-subjects')">📚 Learn</span>
-    <span class="nav-link" onclick="go('page-quiz')">🧠 Quiz</span>
-    <span class="nav-link" onclick="go('page-aichat')">🤖 AI Chat</span>
-    <span class="nav-link" onclick="go('page-past')">📝 Past Q</span>
-    <span class="nav-link" onclick="go('page-kids')">🎮 Kids</span>
-    <span class="nav-link" onclick="go('page-classroom')">💬 Class</span>
-    <span class="nav-link" onclick="go('page-leaderboard')">🏆 Board</span>
+    <span class="nav-link" onclick="go('page-dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Dashboard</span>
+    <span class="nav-link" onclick="go('page-subjects')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2-2.5z"/><path d="M6 6h10M6 10h10"/></svg> Learn</span>
+    <span class="nav-link" onclick="go('page-quiz')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Quiz</span>
+    <span class="nav-link" onclick="go('page-aichat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/></svg> AI Chat</span>
+    <span class="nav-link" onclick="go('page-past')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Past Q</span>
+    <span class="nav-link" onclick="go('page-kids')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="18" y2="12"/><line x1="12" y1="6" x2="12" y2="18"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Kids</span>
+    <span class="nav-link" onclick="go('page-classroom')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Class</span>
+    <span class="nav-link" onclick="go('page-leaderboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"/><path d="M12 2a5 5 0 0 0-5 5v3.42C7 12 8.4 13 12 13s5-1 5-2.58V7a5 5 0 0 0-5-5z"/></svg> Board</span>
   </div>
   <div class="nav-right">
-    <div class="pill hide-m">⭐<span id="n-score">0</span></div>
-    <div class="pill hide-m">🔥<span id="n-streak">0</span></div>
-    <div class="pill hide-m">🪙<span id="n-coins">0</span></div>
-    <div class="notif-wrap" onclick="toggleNotif()">🔔<div class="notif-dot" id="ndot"></div></div>
-    <div class="pill" onclick="go('page-profile')" style="cursor:pointer;">👤<span id="n-user">—</span></div>
-    <div class="show-m" onclick="toggleMob()" style="font-size:24px;cursor:pointer;padding:6px;align-items:center;">☰</div>
+    <button class="icon-btn" onclick="toggleTheme()" id="theme-toggle-btn" title="Toggle Theme">
+      <svg id="theme-icon-light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="theme-icon-dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="pill hide-m" title="Score"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="n-score">0</span></div>
+    <div class="pill hide-m" title="Streak"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> <span id="n-streak">0</span></div>
+    <div class="pill hide-m" title="Coins"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="9" y1="10" x2="15" y2="10"/></svg> <span id="n-coins">0</span></div>
+    <div class="notif-wrap">
+      <button class="icon-btn" onclick="toggleNotif()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <div class="notif-dot" id="ndot"></div>
+    </div>
+    <div class="pill" onclick="go('page-profile')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span id="n-user">—</span></div>
+    <div class="show-m" onclick="toggleMob()"><button class="icon-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button></div>
   </div>
 </nav>
 
 <div id="mob-menu">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
     <div class="logo">OX-BRIDGE</div>
-    <span onclick="toggleMob()" style="font-size:26px;cursor:pointer;">✕</span>
+    <button class="icon-btn" onclick="toggleMob()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
-  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-    <div class="pill">⭐<span id="m-score">0</span></div>
-    <div class="pill">🔥<span id="m-streak">0</span></div>
-    <div class="pill">🪙<span id="m-coins">0</span></div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+    <div class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="m-score">0</span></div>
+    <div class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> <span id="m-streak">0</span></div>
+    <div class="pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="9" y1="10" x2="15" y2="10"/></svg> <span id="m-coins">0</span></div>
   </div>
-  <button class="mob-btn" onclick="nav('page-dashboard')">🏠 Dashboard</button>
-  <button class="mob-btn" onclick="nav('page-subjects')">📚 Subjects</button>
-  <button class="mob-btn" onclick="nav('page-quiz')">🧠 Quiz Arena</button>
-  <button class="mob-btn" onclick="nav('page-aichat')">🤖 AI Chat</button>
-  <button class="mob-btn" onclick="nav('page-past')">📝 Past Questions</button>
-  <button class="mob-btn" onclick="nav('page-kids')">🎮 Kids Zone</button>
-  <button class="mob-btn" onclick="nav('page-classroom')">💬 Live Classroom</button>
-  <button class="mob-btn" onclick="nav('page-leaderboard')">🏆 Leaderboard</button>
-  <button class="mob-btn" onclick="nav('page-profile')">👤 Profile</button>
-  <button class="mob-btn" style="border-color:var(--danger);color:var(--danger);" onclick="logout()">🚪 Logout</button>
+  <button class="mob-btn" onclick="nav('page-dashboard')">Dashboard</button>
+  <button class="mob-btn" onclick="nav('page-subjects')">Subjects</button>
+  <button class="mob-btn" onclick="nav('page-quiz')">Quiz Arena</button>
+  <button class="mob-btn" onclick="nav('page-aichat')">AI Chat</button>
+  <button class="mob-btn" onclick="nav('page-past')">Past Questions</button>
+  <button class="mob-btn" onclick="nav('page-kids')">Kids Zone</button>
+  <button class="mob-btn" onclick="nav('page-classroom')">Live Classroom</button>
+  <button class="mob-btn" onclick="nav('page-leaderboard')">Leaderboard</button>
+  <button class="mob-btn" onclick="nav('page-profile')">Profile</button>
+  <button class="mob-btn" style="color:var(--danger);" onclick="logout()">Logout</button>
 </div>
 
 <div id="notif-panel">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-    <h3 style="font-family:'Syne',sans-serif;">🔔 Notifications</h3>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <h3 style="font-weight:700;font-size:16px;">Notifications</h3>
     <div style="display:flex;gap:8px;align-items:center;">
-      <button onclick="markAllRead()" class="btn btn-outline" style="padding:5px 10px;font-size:11px;">Mark All Read</button>
-      <span onclick="toggleNotif()" style="cursor:pointer;font-size:20px;">✕</span>
+      <button onclick="markAllRead()" class="btn btn-outline" style="padding:6px 10px;font-size:12px;">Clear All</button>
+      <button class="icon-btn" onclick="toggleNotif()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
   </div>
   <div id="notif-list"><p style="color:var(--muted);font-size:13px;">Loading...</p></div>
@@ -240,108 +293,102 @@ select.inp option{background:var(--surface2);}
 
 <div id="page-landing" class="page active">
   <div class="hero">
-    <div style="position:relative;z-index:2;max-width:700px;padding:20px;">
-      <div style="display:inline-block;background:rgba(0,135,81,.2);color:var(--ng);padding:6px 16px;border-radius:9999px;font-size:13px;margin-bottom:20px;">🇳🇬 Built for Nigerian Students</div>
-      <h1 style="font-size:clamp(2rem,6vw,3.5rem);line-height:1.1;font-family:'Syne',sans-serif;font-weight:800;">
-        Learn Smarter<br>with <span style="background:linear-gradient(90deg,#6c63ff,#00e5a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI Power</span>
+    <div style="max-width:700px;padding:24px;">
+      <div style="display:inline-block;background:rgba(37,99,235,0.08);color:var(--accent);padding:6px 14px;border-radius:4px;font-size:13px;font-weight:600;margin-bottom:24px;border:1px solid rgba(37,99,235,0.15);">Built for Nigerian Education</div>
+      <h1 style="font-size:clamp(2.2rem,6vw,3.75rem);line-height:1.15;font-weight:800;letter-spacing:-1.5px;color:var(--text);margin-bottom:16px;">
+        Learn Smarter with <span style="color:var(--accent);">AI Analytics</span>
       </h1>
-      <p style="margin:20px auto;font-size:1rem;color:var(--muted);max-width:500px;line-height:1.7;">
-        AI-powered lessons, quizzes, and live classrooms for Nursery to University level students in Nigeria.
+      <p style="margin:0 auto 32px;font-size:16px;color:var(--muted);max-width:540px;line-height:1.6;">
+        Intelligent study modules, high-fidelity quiz mechanics, and live virtual spaces optimized from Nursery to Advanced levels.
       </p>
-      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-        <button onclick="go('page-signup')" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Get Started Free →</button>
-        <button onclick="go('page-login')" class="btn btn-outline" style="font-size:1rem;padding:14px 32px;">Login</button>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="go('page-signup')" class="btn btn-primary" style="font-size:15px;padding:12px 28px;">Create Free Account</button>
+        <button onclick="go('page-login')" class="btn btn-outline" style="font-size:15px;padding:12px 28px;">Sign In</button>
       </div>
-      <div style="margin-top:50px;display:flex;justify-content:center;gap:36px;flex-wrap:wrap;">
-        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">10,000+</div><div style="color:var(--muted);font-size:13px;">Students</div></div>
-        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">26</div><div style="color:var(--muted);font-size:13px;">Subjects</div></div>
-        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">4</div><div style="color:var(--muted);font-size:13px;">AI Engines</div></div>
-        <div style="text-align:center;"><div style="font-size:1.8rem;font-weight:700;font-family:'Syne',sans-serif;">6</div><div style="color:var(--muted);font-size:13px;">Levels</div></div>
+      <div style="margin-top:64px;display:flex;justify-content:center;gap:48px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:32px;">
+        <div style="text-align:left;"><div style="font-size:1.75rem;font-weight:700;color:var(--text);">10,000+</div><div style="color:var(--muted);font-size:13px;">Students</div></div>
+        <div style="text-align:left;"><div style="font-size:1.75rem;font-weight:700;color:var(--text);">26</div><div style="color:var(--muted);font-size:13px;">Specialized Subjects</div></div>
+        <div style="text-align:left;"><div style="font-size:1.75rem;font-weight:700;color:var(--text);">4</div><div style="color:var(--muted);font-size:13px;">Neural Engines</div></div>
+        <div style="text-align:left;"><div style="font-size:1.75rem;font-weight:700;color:var(--text);">6</div><div style="color:var(--muted);font-size:13px;">Academic Levels</div></div>
       </div>
     </div>
-    <div id="particles"></div>
   </div>
 
-  <div style="padding:70px 16px;max-width:1100px;margin:0 auto;">
-    <h2 style="text-align:center;font-size:1.8rem;margin-bottom:36px;font-family:'Syne',sans-serif;">Everything You Need to Excel</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;">
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🤖</div><h3 style="font-family:'Syne',sans-serif;">AI Tutor</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Instant explanations on any topic at your level</p></div>
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🧠</div><h3 style="font-family:'Syne',sans-serif;">Smart Quiz</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">AI-generated questions with full explanations</p></div>
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">💬</div><h3 style="font-family:'Syne',sans-serif;">AI Chat Space</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Ask the AI tutor anything, anytime</p></div>
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">📝</div><h3 style="font-family:'Syne',sans-serif;">Past Questions</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Real WAEC &amp; JAMB questions with explanations</p></div>
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🎮</div><h3 style="font-family:'Syne',sans-serif;">Kids Zone</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Fun educational games for younger students</p></div>
-      <div class="card" style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:12px;">🏆</div><h3 style="font-family:'Syne',sans-serif;">Leaderboard</h3><p style="color:var(--muted);margin-top:8px;font-size:13px;">Compete with students across Nigeria</p></div>
+  <div style="padding:40px 24px 80px;max-width:1100px;margin:0 auto;">
+    <h2 style="text-align:center;font-size:24px;font-weight:700;margin-bottom:40px;letter-spacing:-0.5px;">Core Core Capabilities</h2>
+    <div class="grid3">
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">AI Tutor Core</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Structured contextual answers mapped instantly to your targeted curriculum path.</p></div>
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">Smart Evaluation</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Dynamic quiz matrix adjusting item difficulty based on immediate retrieval scores.</p></div>
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">Context Spaces</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Deep dialogic learning windows available 24/7 for query evaluation.</p></div>
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">National Archives</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Verified WAEC and JAMB past examinations with modular performance steps.</p></div>
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">Junior Interfaces</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Refined interaction nodes safely configured for lower primary comprehension.</p></div>
+      <div class="card"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">Performance Boards</h3><p style="color:var(--muted);font-size:14px;line-height:1.5;">Transparent tracking metrics monitoring educational velocity nationwide.</p></div>
     </div>
   </div>
 
-  <div style="padding:50px 16px;max-width:800px;margin:0 auto;text-align:center;">
-    <h2 style="font-size:1.8rem;margin-bottom:36px;font-family:'Syne',sans-serif;">How It Works</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
-      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">📝</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">1. Sign Up</h3><p style="color:var(--muted);font-size:13px;">Create your free account in seconds</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">📚</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">2. Choose Level</h3><p style="color:var(--muted);font-size:13px;">From Nursery to University</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:10px;">🚀</div><h3 style="font-family:'Syne',sans-serif;margin-bottom:6px;">3. Start Learning</h3><p style="color:var(--muted);font-size:13px;">AI teaches you instantly</p></div>
+  <div style="padding:60px 24px;max-width:900px;margin:0 auto;border-top:1px solid var(--border);">
+    <h2 style="text-align:center;font-size:24px;font-weight:700;margin-bottom:40px;">System Mechanics</h2>
+    <div class="grid3">
+      <div style="text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;">01 / REGISTRATION</div><p style="color:var(--muted);font-size:14px;">Establish a validated student secure profile node.</p></div>
+      <div style="text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;">02 / LEVEL ALLOCATION</div><p style="color:var(--muted);font-size:14px;">Set curriculum filters from Primary up to University lines.</p></div>
+      <div style="text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;">03 / ACCELERATION</div><p style="color:var(--muted);font-size:14px;">Engage natural language engines to begin tracking milestones.</p></div>
     </div>
   </div>
 
-  <div style="background:linear-gradient(90deg,var(--accent),#00e5a0);color:#000;padding:50px 20px;text-align:center;margin:20px 16px;border-radius:24px;">
-    <h2 style="font-size:1.8rem;margin-bottom:14px;font-family:'Syne',sans-serif;">Ready to start your learning journey?</h2>
-    <button onclick="go('page-signup')" class="btn" style="background:#fff;color:#000;font-size:1rem;padding:14px 36px;">Create Free Account</button>
-  </div>
-
-  <footer style="text-align:center;padding:50px 16px;color:var(--muted);font-size:13px;">
-    <div class="logo" style="font-size:18px;margin-bottom:10px;">OX-BRIDGE</div>
-    <p style="margin-bottom:4px;">Built with ❤️ by Goodnews Solomon</p>
-    <p style="color:var(--accent);font-weight:600;">Ox-Bridge Technology</p>
-    <p style="margin-top:16px;">© 2026 Ox-Bridge Learning Hub. All rights reserved.</p>
+  <footer style="text-align:center;padding:80px 24px 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);background:var(--surface);">
+    <div class="logo" style="font-size:18px;margin-bottom:12px;">OX-BRIDGE</div>
+    <p style="margin-bottom:4px;">Built with technical accuracy by Goodnews Solomon</p>
+    <p style="color:var(--accent);font-weight:600;">Ox-Bridge Technology Node</p>
+    <p style="margin-top:24px;font-size:12px;opacity:0.7;">© 2026 Ox-Bridge Learning Hub. All architecture rights reserved.</p>
   </footer>
 </div>
 
 <div id="page-signup" class="page">
-  <div style="max-width:420px;margin:70px auto 40px;padding:16px;">
-    <div onclick="go('page-landing')" style="cursor:pointer;font-size:26px;margin-bottom:16px;color:var(--muted);">←</div>
-    <div class="card" style="padding:32px 24px;">
+  <div style="max-width:400px;margin:80px auto;padding:16px;">
+    <button onclick="go('page-landing')" class="btn btn-outline" style="padding:6px 12px;font-size:12px;margin-bottom:20px;">← Back</button>
+    <div class="card">
       <div style="text-align:center;margin-bottom:24px;">
         <div class="logo" style="font-size:24px;">OX-BRIDGE</div>
-        <h2 style="margin-top:14px;font-family:'Syne',sans-serif;">Create Account</h2>
-        <p style="color:var(--muted);font-size:13px;margin-top:6px;">Join thousands of Nigerian students</p>
+        <h2 style="margin-top:12px;font-size:20px;font-weight:700;">Create Student Node</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:4px;">Access centralized learning resources</p>
       </div>
-      <input id="su-user" class="inp" type="text" placeholder="Username (min 3 chars)" autocomplete="username">
-      <input id="su-email" class="inp" type="email" placeholder="your@email.com" autocomplete="email">
+      <input id="su-user" class="inp" type="text" placeholder="Username" autocomplete="username">
+      <input id="su-email" class="inp" type="email" placeholder="Email address" autocomplete="email">
       <div style="position:relative;">
-        <input id="su-pass" class="inp" type="password" placeholder="Password (min 6 chars)" style="padding-right:46px;" autocomplete="new-password">
-        <span onclick="togglePwd('su-pass',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+        <input id="su-pass" class="inp" type="password" placeholder="Password" style="padding-right:40px;" autocomplete="new-password">
+        <span onclick="togglePwd('su-pass',this)" style="position:absolute;right:12px;top:12px;cursor:pointer;font-size:14px;color:var(--muted);">Show</span>
       </div>
       <div style="position:relative;">
-        <input id="su-conf" class="inp" type="password" placeholder="Confirm Password" style="padding-right:46px;" autocomplete="new-password">
-        <span onclick="togglePwd('su-conf',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+        <input id="su-conf" class="inp" type="password" placeholder="Confirm Password" style="padding-right:40px;" autocomplete="new-password">
+        <span onclick="togglePwd('su-conf',this)" style="position:absolute;right:12px;top:12px;cursor:pointer;font-size:14px;color:var(--muted);">Show</span>
       </div>
       <div id="su-err" class="err-box"></div>
-      <button onclick="doSignup()" id="su-btn" class="btn btn-primary" style="width:100%;padding:14px;">Create Account</button>
-      <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px;">
-        Already have an account? <span onclick="go('page-login')" style="color:var(--accent);cursor:pointer;">Login →</span>
+      <button onclick="doSignup()" id="su-btn" class="btn btn-primary" style="width:100%;padding:12px;">Initialize Account</button>
+      <p style="text-align:center;margin-top:20px;color:var(--muted);font-size:13px;">
+        Existing profile? <span onclick="go('page-login')" style="color:var(--accent);cursor:pointer;font-weight:500;">Sign In</span>
       </p>
     </div>
   </div>
 </div>
 
 <div id="page-login" class="page">
-  <div style="max-width:420px;margin:70px auto 40px;padding:16px;">
-    <div onclick="go('page-landing')" style="cursor:pointer;font-size:26px;margin-bottom:16px;color:var(--muted);">←</div>
-    <div class="card" style="padding:32px 24px;" id="login-card">
+  <div style="max-width:400px;margin:80px auto;padding:16px;">
+    <button onclick="go('page-landing')" class="btn btn-outline" style="padding:6px 12px;font-size:12px;margin-bottom:20px;">← Back</button>
+    <div class="card" id="login-card">
       <div style="text-align:center;margin-bottom:24px;">
         <div class="logo" style="font-size:24px;">OX-BRIDGE</div>
-        <h2 style="margin-top:14px;font-family:'Syne',sans-serif;">Welcome Back 👋</h2>
-        <p style="color:var(--muted);font-size:13px;margin-top:6px;">Login to continue learning</p>
+        <h2 style="margin-top:12px;font-size:20px;font-weight:700;">Account Authentication</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:4px;">Provide credentials to sync environment</p>
       </div>
       <input id="li-user" class="inp" type="text" placeholder="Username" autocomplete="username">
       <div style="position:relative;">
-        <input id="li-pass" class="inp" type="password" placeholder="Password" style="padding-right:46px;" autocomplete="current-password">
-        <span onclick="togglePwd('li-pass',this)" style="position:absolute;right:14px;top:15px;cursor:pointer;font-size:16px;">👁</span>
+        <input id="li-pass" class="inp" type="password" placeholder="Password" style="padding-right:40px;" autocomplete="current-password">
+        <span onclick="togglePwd('li-pass',this)" style="position:absolute;right:12px;top:12px;cursor:pointer;font-size:14px;color:var(--muted);">Show</span>
       </div>
       <div id="li-err" class="err-box"></div>
-      <button onclick="doLogin()" id="li-btn" class="btn btn-primary" style="width:100%;padding:14px;">Login</button>
-      <p style="text-align:center;margin-top:18px;color:var(--muted);font-size:13px;">
-        Don't have an account? <span onclick="go('page-signup')" style="color:var(--accent);cursor:pointer;">Sign up →</span>
+      <button onclick="doLogin()" id="li-btn" class="btn btn-primary" style="width:100%;padding:12px;">Authenticate Node</button>
+      <p style="text-align:center;margin-top:20px;color:var(--muted);font-size:13px;">
+        Need authorization? <span onclick="go('page-signup')" style="color:var(--accent);cursor:pointer;font-weight:500;">Register Hub</span>
       </p>
     </div>
   </div>
@@ -349,38 +396,41 @@ select.inp option{background:var(--surface2);}
 
 <div id="page-dashboard" class="page">
   <div class="pc">
-    <div id="greeting" style="font-size:1.5rem;font-family:'Syne',sans-serif;font-weight:800;margin-bottom:4px;"></div>
-    <p style="color:var(--muted);margin-bottom:24px;font-size:13px;">Ready to learn something new today?</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:13px;margin-bottom:24px;">
-      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">⭐</div><div id="ds-score" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Score</div></div>
-      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🔥</div><div id="ds-streak" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Streak</div></div>
-      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🧠</div><div id="ds-quizzes" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Quizzes</div></div>
-      <div class="card" style="text-align:center;"><div style="font-size:1.8rem;">🪙</div><div id="ds-coins" style="font-size:1.5rem;font-weight:700;font-family:'Syne',sans-serif;">—</div><div style="color:var(--muted);font-size:12px;">Coins</div></div>
+    <div id="greeting" style="font-size:24px;font-weight:700;margin-bottom:4px;color:var(--text);"></div>
+    <p style="color:var(--muted);margin-bottom:32px;font-size:14px;">Operational tracking parameters and active modules.</p>
+    
+    <div class="grid4" style="margin-bottom:32px;">
+      <div class="card" style="padding:20px;"><div style="color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Aggregate Score</div><div id="ds-score" style="font-size:24px;font-weight:700;color:var(--text);">—</div></div>
+      <div class="card" style="padding:20px;"><div style="color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Velocity Streak</div><div id="ds-streak" style="font-size:24px;font-weight:700;color:var(--text);">—</div></div>
+      <div class="card" style="padding:20px;"><div style="color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Completed Evaluations</div><div id="ds-quizzes" style="font-size:24px;font-weight:700;color:var(--text);">—</div></div>
+      <div class="card" style="padding:20px;"><div style="color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Token Store</div><div id="ds-coins" style="font-size:24px;font-weight:700;color:var(--text);">—</div></div>
     </div>
-    <div class="card" style="border:2px solid var(--warn);margin-bottom:24px;">
-      <h3 style="color:var(--warn);font-family:'Syne',sans-serif;margin-bottom:4px;">⚡ Daily Challenge</h3>
-      <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Answer correctly for +5 points &amp; +10 coins!</p>
-      <div id="dc-area"><div class="skel" style="height:18px;margin-bottom:8px;"></div><div class="skel" style="height:40px;"></div></div>
+    
+    <div class="card" style="border-left:4px solid var(--warn);margin-bottom:32px;background:var(--surface);">
+      <h3 style="color:var(--warn);font-size:15px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Active Daily Challenge</h3>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Correct parsing yields +5 Core Points and +10 Tokens.</p>
+      <div id="dc-area"><div class="skel" style="height:18px;margin-bottom:8px;width:60%;"></div><div class="skel" style="height:40px;width:100%;"></div></div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+    
+    <div class="grid2">
       <div>
-        <h3 style="margin-bottom:14px;font-family:'Syne',sans-serif;">⚡ Quick Study</h3>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-          <div onclick="openLearn('Mathematics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📐<br><small>Maths</small></div>
-          <div onclick="openLearn('English Language','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📖<br><small>English</small></div>
-          <div onclick="openLearn('Biology','SSS')" class="card card-hover" style="text-align:center;padding:12px;">🔬<br><small>Biology</small></div>
-          <div onclick="openLearn('Physics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">⚛️<br><small>Physics</small></div>
-          <div onclick="openLearn('Chemistry','SSS')" class="card card-hover" style="text-align:center;padding:12px;">⚗️<br><small>Chem</small></div>
-          <div onclick="openLearn('Economics','SSS')" class="card card-hover" style="text-align:center;padding:12px;">📊<br><small>Econs</small></div>
+        <h3 style="margin-bottom:16px;font-size:16px;font-weight:600;">Immediate Acceleration Subjects</h3>
+        <div class="grid3">
+          <div onclick="openLearn('Mathematics','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">Mathematics</div>
+          <div onclick="openLearn('English Language','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">English</div>
+          <div onclick="openLearn('Biology','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">Biology</div>
+          <div onclick="openLearn('Physics','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">Physics</div>
+          <div onclick="openLearn('Chemistry','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">Chemistry</div>
+          <div onclick="openLearn('Economics','SSS')" class="card card-hover" style="text-align:center;padding:16px;font-size:13px;font-weight:500;">Economics</div>
         </div>
       </div>
       <div>
-        <h3 style="margin-bottom:14px;font-family:'Syne',sans-serif;">🏅 My Badges</h3>
-        <div id="ds-badges" style="display:flex;gap:10px;flex-wrap:wrap;">
-          <div class="skel" style="width:54px;height:54px;border-radius:10px;"></div>
-          <div class="skel" style="width:54px;height:54px;border-radius:10px;"></div>
+        <h3 style="margin-bottom:16px;font-size:16px;font-weight:600;">Earned System Merits</h3>
+        <div id="ds-badges" style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="skel" style="width:50px;height:50px;border-radius:4px;"></div>
+          <div class="skel" style="width:50px;height:50px;border-radius:4px;"></div>
         </div>
-        <button onclick="go('page-profile')" class="btn btn-outline" style="margin-top:14px;padding:8px 16px;font-size:12px;">View All Badges</button>
+        <button onclick="go('page-profile')" class="btn btn-outline" style="margin-top:16px;padding:8px 14px;font-size:12px;">Query Merit Registry</button>
       </div>
     </div>
   </div>
@@ -388,43 +438,43 @@ select.inp option{background:var(--surface2);}
 
 <div id="page-subjects" class="page">
   <div class="pc">
-    <div class="sh">📚 Subjects</div>
-    <p class="sh-sub">Choose your level and pick a subject to start learning</p>
+    <div class="sh">Curriculum Matrices</div>
+    <p class="sh-sub">Select instructional framework filters to compile standard paths</p>
     <div class="level-tabs" id="level-tabs"></div>
-    <div id="subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;"></div>
+    <div id="subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;"></div>
   </div>
 </div>
 
 <div id="page-learn" class="page">
   <div class="pc" style="max-width:800px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-      <span onclick="go('page-subjects')" style="cursor:pointer;font-size:22px;color:var(--muted);">←</span>
-      <div class="sh" style="margin:0;">🤖 AI Tutor</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <button onclick="go('page-subjects')" class="btn btn-outline" style="padding:6px 12px;font-size:12px;">← Return</button>
+      <div class="sh" style="margin:0;">Neural Tutor Interface</div>
     </div>
-    <div class="card" style="margin-bottom:18px;">
+    <div class="card" style="margin-bottom:20px;">
       <div class="grid2" style="margin-bottom:12px;">
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">TOPIC</label><input id="l-topic" class="inp" style="margin:0;" placeholder="e.g. Photosynthesis"></div>
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">SUBJECT</label><input id="l-subj" class="inp" style="margin:0;" placeholder="e.g. Biology"></div>
+        <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Topic Parameter</label><input id="l-topic" class="inp" style="margin:0;" placeholder="e.g. Organic Chemistry"></div>
+        <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Subject Domain</label><input id="l-subj" class="inp" style="margin:0;" placeholder="e.g. Chemistry"></div>
       </div>
-      <div style="margin-bottom:12px;"><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">LEVEL</label>
+      <div style="margin-bottom:16px;"><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Curriculum Layer</label>
         <select id="l-level" class="inp" style="margin:0;">
           <option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option>
         </select>
       </div>
-      <button onclick="doLearn()" id="l-btn" class="btn btn-primary">✨ Teach Me</button>
+      <button onclick="doLearn()" id="l-btn" class="btn btn-primary" style="padding:12px 24px;">Compile Instruction Module</button>
     </div>
-    <div id="l-loading" style="display:none;" class="card" style="text-align:center;padding:30px;">
-      <div style="font-size:2rem;animation:bounce 1s infinite;">🤖</div>
-      <p style="color:var(--muted);margin-top:10px;">AI is preparing your lesson...</p>
+    <div id="l-loading" style="display:none;" class="card" style="text-align:center;padding:40px;">
+      <div class="spinner" style="margin:0 auto 16px;"></div>
+      <p style="color:var(--muted);font-size:14px;">Parsing knowledge maps and training logic pathways...</p>
     </div>
     <div id="l-result" style="display:none;">
-      <div class="card" style="border-color:var(--accent2);">
-        <h3 id="l-title" style="font-family:'Syne',sans-serif;color:var(--accent2);margin-bottom:14px;"></h3>
-        <div id="l-text" style="line-height:1.9;font-size:14px;white-space:pre-wrap;"></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
-          <button onclick="logStudy()" class="btn btn-outline" style="font-size:12px;padding:8px 14px;">📝 Log Study</button>
-          <button onclick="goQuizFromLearn()" class="btn btn-primary" style="font-size:12px;padding:8px 14px;">🧠 Take Quiz</button>
-          <button onclick="go('page-aichat')" class="btn" style="background:var(--surface2);font-size:12px;padding:8px 14px;">💬 Ask AI More</button>
+      <div class="card" style="border-top:4px solid var(--accent);">
+        <h3 id="l-title" style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;"></h3>
+        <div id="l-text" style="line-height:1.75;font-size:14px;color:var(--text);white-space:pre-wrap;background:var(--surface2);padding:20px;border-radius:6px;border:1px solid var(--border);"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+          <button onclick="logStudy()" class="btn btn-outline" style="font-size:13px;">Commit Log To Profile</button>
+          <button onclick="goQuizFromLearn()" class="btn btn-primary" style="font-size:13px;">Execute Matrix Evaluation</button>
+          <button onclick="go('page-aichat')" class="btn btn-outline" style="font-size:13px;">Initialize Analysis Queries</button>
         </div>
       </div>
     </div>
@@ -432,139 +482,74 @@ select.inp option{background:var(--surface2);}
 </div>
 
 <div id="page-quiz" class="page">
-  <div class="pc" style="max-width:700px;">
-    <div class="sh">🧠 Quiz Arena</div>
-    <p class="sh-sub">Test your knowledge with AI-generated questions</p>
+  <div class="pc" style="max-width:750px;">
+    <div class="sh">Evaluation Arena</div>
+    <p class="sh-sub">Target core metric points via automated natural language testing frameworks</p>
     <div id="qz-setup" class="card">
-      <div class="grid3" style="margin-bottom:14px;">
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">SUBJECT</label><input id="qz-subj" class="inp" style="margin:0;" placeholder="e.g. Mathematics"></div>
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">LEVEL</label>
-          <select id="qz-level" class="inp" style="margin:0;"><option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option></select>
-        </div>
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;">TOPIC (optional)</label><input id="qz-topic" class="inp" style="margin:0;" placeholder="e.g. Algebra"></div>
+      <div class="grid3" style="margin-bottom:16px;">
+        <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Subject</label><input id="qz-subj" class="inp" style="margin:0;" placeholder="e.g. Mathematics"></div>
+        <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Academic Tier</label> <select id="qz-level" class="inp" style="margin:0;"><option>Nursery</option><option>Primary</option><option>JSS</option><option selected>SSS</option><option>WAEC</option><option>JAMB</option><option>University</option></select> </div>
+        <div><label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;">Sub-Topic Matrix</label><input id="qz-topic" class="inp" style="margin:0;" placeholder="e.g. Equations"></div>
       </div>
-      <button onclick="startQuiz()" id="qz-btn" class="btn btn-primary" style="padding:13px 28px;">▶ Start Quiz</button>
+      <button onclick="startQuiz()" id="qz-btn" class="btn btn-primary" style="padding:12px 24px;">Initialize Evaluation Session</button>
+    </div>
+    <div id="qz-active" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-weight:700;font-size:14px;color:var(--muted);" id="qz-counter">Segment 1/5</div>
+        <div style="display:flex;gap:8px;">
+          <div class="pill">Score Vector: <span id="qz-live" style="font-weight:700;">0</span></div>
+          <div class="pill">Clock Boundary: <span id="qz-time" style="font-weight:700;">30</span>s</div>
+        </div>
+      </div>
+      <div style="height:4px;background:var(--surface2);border-radius:2px;margin-bottom:20px;overflow:hidden;border:1px solid var(--border);"><div id="timer-fill" style="width:100%;"></div></div>
+      <div class="card">
+        <p id="qz-q" style="font-size:15px;line-height:1.6;margin-bottom:20px;font-weight:500;color:var(--text);"></p>
+        <div id="qz-opts"></div>
+        <div id="qz-expl" style="display:none;margin-top:16px;padding:16px;background:var(--surface2);border-radius:6px;border-left:4px solid var(--accent);font-size:13.5px;line-height:1.6;color:var(--text);"></div>
+        <button onclick="nextQ()" id="qz-next" class="btn btn-primary" style="display:none;margin-top:16px;">Increment Matrix State →</button>
+      </div>
+    </div>
+    <div id="qz-results" style="display:none;" class="card" style="text-align:center;">
+      <div style="font-size:24px;font-weight:800;color:var(--accent);margin-bottom:8px;" id="qz-final"></div>
+      <p id="qz-msg" style="color:var(--muted);margin-bottom:20px;font-size:14px;"></p>
+      <div id="qz-new-badges" style="margin-bottom:16px;"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <button onclick="retakeQuiz()" class="btn btn-outline">Re-Initialize Session</button>
+        <button onclick="go('page-dashboard')" class="btn btn-primary">Sync System State</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="page-aichat" class="page"></div>
-<div id="page-past" class="page"></div>
-<div id="page-kids" class="page"></div>
-<div id="page-classroom" class="page"></div>
-<div id="page-leaderboard" class="page"></div>
-<div id="page-profile" class="page"></div>
-
 <script>
-// Global state variables
-const API = "https://api.oxbridge.example.com"; // Setup placeholder or custom API string
-let CU = null; 
-
-// Initial router control 
-function go(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(pageId);
-  if(target) target.classList.add('active');
-  
-  // Conditionally hide navbar on authentication pages 
-  if(pageId === 'page-landing' || pageId === 'page-signup' || pageId === 'page-login') {
-    document.getElementById('navbar').style.display = 'none';
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', targetTheme);
+  localStorage.setItem('ox-bridge-theme', targetTheme);
+  updateThemeUI(targetTheme);
+}
+function updateThemeUI(theme) {
+  const lightIcon = document.getElementById('theme-icon-light');
+  const darkIcon = document.getElementById('theme-icon-dark');
+  if(!lightIcon || !darkIcon) return;
+  if(theme === 'dark') {
+    lightIcon.style.display = 'block';
+    darkIcon.style.display = 'none';
   } else {
-    document.getElementById('navbar').style.display = 'flex';
+    lightIcon.style.display = 'none';
+    darkIcon.style.display = 'block';
   }
 }
-
-function goHome() { go('page-landing'); }
-function toggleMob() {
-  const menu = document.getElementById('mob-menu');
-  menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-}
-function nav(pageId) { toggleMob(); go(pageId); }
-function toggleNotif() {
-  document.getElementById('notif-panel').classList.toggle('open');
-}
-
-// Password field visibility toggle
-function togglePwd(id, el) {
-  const input = document.getElementById(id);
-  if(input.type === "password") {
-    input.type = "text";
-    el.innerText = "🙈";
-  } else {
-    input.type = "password";
-    el.innerText = "👁";
-  }
-}
-
-// Custom app screen display initializer
+// Run initialization inline immediately before processing original assets to avoid flash
+(function() {
+  const savedTheme = localStorage.getItem('ox-bridge-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    document.getElementById('app-loading').style.display = 'none';
-    go('page-landing');
-  }, 1200);
-  makeParticles();
+  updateThemeUI(document.documentElement.getAttribute('data-theme'));
 });
-
-// Toast Notifications
-function toast(msg, type = "success") {
-  const box = document.getElementById('toasts');
-  const t = document.createElement('div');
-  t.className = `toast`;
-  t.style.borderColor = type === "success" ? "var(--accent2)" : "var(--danger)";
-  t.innerText = msg;
-  box.appendChild(t);
-  setTimeout(() => t.remove(), 3500);
-}
-
-// Simple authentication placeholder triggers
-function doSignup() {
-  const user = document.getElementById('su-user').value.trim();
-  const email = document.getElementById('su-email').value.trim();
-  const pass = document.getElementById('su-pass').value;
-  const conf = document.getElementById('su-conf').value;
-  const errBox = document.getElementById('su-err');
-  
-  errBox.style.display = 'none';
-  if(user.length < 3) { errBox.innerText = "Username too short!"; errBox.style.display='block'; return; }
-  if(!email.includes('@')) { errBox.innerText = "Invalid email formatting!"; errBox.style.display='block'; return; }
-  if(pass.length < 6) { errBox.innerText = "Password must be min 6 chars!"; errBox.style.display='block'; return; }
-  if(pass !== conf) { errBox.innerText = "Passwords do not match!"; errBox.style.display='block'; return; }
-  
-  CU = user;
-  document.getElementById('n-user').innerText = CU;
-  toast("Account Created!", "success");
-  go('page-dashboard');
-}
-
-function doLogin() {
-  const user = document.getElementById('li-user').value.trim();
-  const pass = document.getElementById('li-pass').value;
-  const errBox = document.getElementById('li-err');
-  
-  errBox.style.display = 'none';
-  if(!user || !pass) { errBox.innerText = "Please fill in all fields."; errBox.style.display='block'; return; }
-  
-  CU = user;
-  document.getElementById('n-user').innerText = CU;
-  toast("Welcome Back!", "success");
-  go('page-dashboard');
-}
-
-function logout() {
-  CU = null;
-  toast("Logged Out", "warn");
-  go('page-landing');
-}
-
-// Ambient Background Animation Particles
-function makeParticles(){
-  const c = document.getElementById("particles"); if(!c) return;
-  for(let i=0; i<12; i++){
-    const p = document.createElement("div"); p.className = "particle";
-    p.style.cssText = `left:${Math.random()*100}vw;width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;animation-duration:${Math.random()*20+15}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.4}`;
-    c.appendChild(p);
-  }
-}
 </script>
+
 </body>
 </html>
