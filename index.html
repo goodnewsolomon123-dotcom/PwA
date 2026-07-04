@@ -2259,6 +2259,13 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
 <div id="page-theory" class="page">
   <div class="pc" style="max-width:800px;">
 
+    <div class="pq-exam-row" style="margin-bottom:20px;max-width:420px;">
+      <button class="pq-exam-btn active" id="th-tab-lessons" onclick="theorySwitchTab('lessons')">📘 Topic Lessons</button>
+      <button class="pq-exam-btn" id="th-tab-exam" onclick="theorySwitchTab('exam')">📝 WAEC/NECO Theory</button>
+    </div>
+
+  <div id="theory-lessons-wrap">
+
     <!-- SUBJECTS LIST VIEW -->
     <div id="theory-subjects-view">
       <div class="sh">Theory Lessons</div>
@@ -2353,6 +2360,117 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
         </div>
       </div>
     </div>
+
+  </div>
+  <!-- /theory-lessons-wrap -->
+
+  <!-- ══════════════════════════════════════════
+       WAEC / NECO EXAM THEORY
+  ══════════════════════════════════════════ -->
+  <div id="theory-exam-wrap" style="display:none;">
+
+    <!-- SUBJECTS VIEW -->
+    <div id="et-subjects-view">
+      <div class="sh">WAEC / NECO Theory</div>
+      <p class="sh-sub">Real past theory (essay) questions with AI explanations and model answers</p>
+      <div id="et-subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px;">
+        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
+      </div>
+    </div>
+
+    <!-- YEARS / EXAM TYPE VIEW -->
+    <div id="et-years-view" style="display:none;">
+      <div class="breadcrumb">
+        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span id="et-subject-name" style="color:var(--text);cursor:default;"></span>
+      </div>
+      <div class="sh" id="et-years-title" style="margin-bottom:6px;"></div>
+      <p class="sh-sub" style="margin-bottom:16px;">Choose exam type and year</p>
+      <div class="pq-exam-row" id="et-exam-row" style="max-width:320px;margin-bottom:18px;"></div>
+      <div id="et-year-chips" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
+    <!-- QUESTIONS LIST VIEW -->
+    <div id="et-questions-view" style="display:none;">
+      <div class="breadcrumb">
+        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span id="et-q-subject-crumb" onclick="etBackToYears()" style="cursor:pointer;"></span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span id="et-q-year-crumb" style="color:var(--text);cursor:default;"></span>
+      </div>
+      <div class="sh" style="margin-bottom:6px;">Theory Questions</div>
+      <p class="sh-sub" style="margin-bottom:20px;">Tap a question to view it and get an AI explanation</p>
+      <div id="et-questions-list" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
+      </div>
+    </div>
+
+    <!-- QUESTION DETAIL VIEW -->
+    <div id="et-detail-view" style="display:none;">
+      <div class="breadcrumb">
+        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span onclick="etBackToQuestions()" style="cursor:pointer;">Questions</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span style="color:var(--text);cursor:default;">Question</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="et-detail-badges"></div>
+        <div id="et-detail-question" style="font-size:14px;line-height:1.85;white-space:pre-wrap;"></div>
+        <div id="et-detail-img-wrap" class="theory-img-wrap" style="display:none;margin-top:14px;">
+          <img id="et-detail-img" src="" alt="Diagram">
+        </div>
+      </div>
+
+      <div id="et-explain-trigger">
+        <button class="btn btn-primary" onclick="etGetExplanation()">
+          🤖 Get AI Explanation &amp; Model Answer
+        </button>
+      </div>
+
+      <div id="et-explain-loading" style="display:none;text-align:center;padding:40px 20px;">
+        <div class="spinner" style="margin:0 auto 16px;"></div>
+        <p style="color:var(--muted);font-size:14px;">AI is preparing a detailed explanation...</p>
+      </div>
+
+      <div id="et-explain-content" class="card" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <div style="font-weight:700;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:7px;">
+            <span>🤖</span> AI Explanation &amp; Model Answer
+          </div>
+          <div style="display:flex;gap:7px;">
+            <button class="bubble-btn speak-btn" onclick="etSpeak()">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+              Speak
+            </button>
+            <button class="bubble-btn" onclick="stopSpeaking()">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              Stop
+            </button>
+          </div>
+        </div>
+        <div id="et-explanation-html" class="theory-explanation"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+        <button class="btn btn-ghost" onclick="go('page-aichat')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Ask AI More
+        </button>
+        <button class="btn btn-ghost" onclick="etBackToQuestions()">
+          ← More Questions
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <!-- /theory-exam-wrap -->
 
   </div>
 </div>
@@ -2515,7 +2633,7 @@ let qData=[], qIdx=0, qScore=0, qTimer=null, qSec=30;
 let qSubj="", qLevel="", qTopic="";
 
 // OTHER STATE
-let pqExam="WAEC", kidsLevel="Primary", ws=null;
+let pqExam="WAEC", kidsLevel="Primary", ws=null, wsIntentionalClose=false, wsHeartbeat=null, wsReconnectAttempts=0;
 
 // ============================================================
 // THEME TOGGLE
@@ -2742,6 +2860,8 @@ async function doLogin(){
 function logout(){
   clearAuth();
   document.getElementById("navbar").style.display="none";
+  wsIntentionalClose=true;
+  if(wsHeartbeat){clearInterval(wsHeartbeat);wsHeartbeat=null;}
   if(ws){ws.close();ws=null;}
   go("page-landing");
   toast("Logged out successfully","info");
@@ -3587,17 +3707,43 @@ async function saveKS(type,score){
 // ============================================================
 // CLASSROOM
 // ============================================================
+let currentRoomName=null;
 function joinRoom(){
-  const room=document.getElementById("room-inp").value.trim();
+  const roomInput=document.getElementById("room-inp").value.trim();
+  const room=roomInput||currentRoomName;
   if(!room) return toast("Please enter a room name","warning");
+  currentRoomName=room;
+  wsIntentionalClose=false;
   document.getElementById("room-sel").style.display="none";
   document.getElementById("room-active").style.display="block";
   document.getElementById("cl-room").textContent=room;
+  connectClassroomWS(room);
+}
+function connectClassroomWS(room){
+  if(wsHeartbeat){ clearInterval(wsHeartbeat); wsHeartbeat=null; }
   const wsUrl=API.replace("https://","wss://").replace("http://","ws://");
   ws=new WebSocket(`${wsUrl}/ws/classroom/${room}`);
-  ws.onopen=()=>toast("Connected to classroom","success");
-  ws.onmessage=e=>addMsg(JSON.parse(e.data));
-  ws.onclose=()=>{ toast("Disconnected. Reconnecting...","warning"); setTimeout(joinRoom,3000); };
+  ws.onopen=()=>{
+    wsReconnectAttempts=0;
+    toast("Connected to classroom","success");
+    // Heartbeat keeps the connection alive through Render's idle-connection proxy timeout
+    wsHeartbeat=setInterval(()=>{
+      if(ws && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:"ping"}));
+    },25000);
+  };
+  ws.onmessage=e=>{
+    const data=JSON.parse(e.data);
+    if(data.type==="pong") return;
+    addMsg(data);
+  };
+  ws.onclose=()=>{
+    if(wsHeartbeat){ clearInterval(wsHeartbeat); wsHeartbeat=null; }
+    if(wsIntentionalClose) return; // user left the room or logged out — don't reconnect
+    wsReconnectAttempts++;
+    const delay=Math.min(3000*wsReconnectAttempts,15000);
+    toast("Disconnected. Reconnecting...","warning");
+    setTimeout(()=>{ if(!wsIntentionalClose && currentRoomName) connectClassroomWS(currentRoomName); },delay);
+  };
   ws.onerror=()=>toast("WebSocket error","error");
 }
 function addMsg(data){
@@ -3621,7 +3767,10 @@ function sendMsg(){
   i.value="";
 }
 function leaveRoom(){
+  wsIntentionalClose=true;
+  if(wsHeartbeat){clearInterval(wsHeartbeat);wsHeartbeat=null;}
   if(ws){ws.close();ws=null;}
+  currentRoomName=null;
   document.getElementById("room-active").style.display="none";
   document.getElementById("room-sel").style.display="block";
   document.getElementById("cl-msgs").innerHTML="";
@@ -3954,6 +4103,195 @@ function theoryBackToTopics(){
   else theoryShowSubjects();
   stopSpeaking();
 }
+// ============================================================
+// WAEC / NECO EXAM THEORY
+// ============================================================
+let etLoaded=false, etSubjectsCache=[], etCurrentSubject=null, etCurrentExam="WAEC",
+    etCurrentYear=null, etCurrentQId=null, etCurrentQData=null, etCurrentExplanation="";
+
+function theorySwitchTab(tab){
+  document.getElementById('th-tab-lessons').classList.toggle('active', tab==='lessons');
+  document.getElementById('th-tab-exam').classList.toggle('active', tab==='exam');
+  document.getElementById('theory-lessons-wrap').style.display = tab==='lessons' ? 'block' : 'none';
+  document.getElementById('theory-exam-wrap').style.display = tab==='exam' ? 'block' : 'none';
+  stopSpeaking();
+  if(tab==='exam' && !etLoaded){ etLoaded=true; loadExamTheorySubjects(); }
+}
+
+async function loadExamTheorySubjects(){
+  etShowSubjects();
+  const grid=document.getElementById('et-subjects-grid');
+  grid.innerHTML=`<div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>`;
+  try{
+    const r=await fetch(`${API}/waec-theory/subjects`);
+    const d=await r.json();
+    etSubjectsCache=d;
+    if(!Array.isArray(d)||!d.length){
+      grid.innerHTML=`<div class="card" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">
+        <div style="font-size:2.5rem;margin-bottom:12px;">📝</div>
+        <p>No WAEC/NECO theory questions yet. Check back soon!</p>
+      </div>`;
+      return;
+    }
+    const subjectIcons={'English':'📖','Mathematics':'📐','Biology':'🔬','Physics':'⚛️','Chemistry':'⚗️','Economics':'📊','Government':'⚖️','History':'🏛️','Geography':'🌍','Literature':'📜','Commerce':'🏪','Agriculture':'🌾','Computer':'💻','French':'🇫🇷','Civic':'🏳️'};
+    function getIcon(name){ for(const [k,v] of Object.entries(subjectIcons)){ if(name.toLowerCase().includes(k.toLowerCase())) return v; } return '📝'; }
+    const colors=['#1d4ed8','#0d9488','#7c3aed','#d97706','#dc2626','#16a34a','#0284c7','#db2777'];
+    grid.innerHTML=d.map((s,i)=>{
+      const examBadges=s.exams.map(e=>`<span class="badge ${e.exam_type==='NECO'?'badge-blue':'badge-teal'}" style="font-size:10px;padding:2px 8px;">${e.exam_type} · ${e.count}</span>`).join(' ');
+      return `
+      <div class="theory-subject-card" onclick="etOpenSubject(${i})">
+        <div class="theory-subject-icon" style="background:${colors[i%colors.length]};">${getIcon(s.subject)}</div>
+        <div class="theory-subject-info" style="flex:1;">
+          <h3>${s.subject}</h3>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;">${examBadges}</div>
+        </div>
+        <svg width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`;
+    }).join('');
+  }catch(e){ grid.innerHTML=`<p style="color:var(--danger);padding:20px;">Could not load subjects. Check your connection.</p>`; }
+}
+
+function etOpenSubject(idx){
+  const info=etSubjectsCache[idx];
+  if(!info) return;
+  etCurrentSubject=info.subject;
+  const exams=info.exams.map(e=>e.exam_type);
+  etCurrentExam=exams.includes('WAEC')?'WAEC':exams[0];
+  document.getElementById('et-subject-name').textContent=info.subject;
+  document.getElementById('et-years-title').textContent=info.subject;
+  const examRow=document.getElementById('et-exam-row');
+  examRow.innerHTML=exams.map(ex=>`<button class="pq-exam-btn ${ex===etCurrentExam?'active':''}" onclick="etSetExam('${ex}',this)">${ex}</button>`).join('');
+  etShowYears();
+  loadEtYears();
+}
+
+function etSetExam(ex,btn){
+  etCurrentExam=ex;
+  btn.parentElement.querySelectorAll('.pq-exam-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadEtYears();
+}
+
+async function loadEtYears(){
+  const chips=document.getElementById('et-year-chips');
+  chips.innerHTML=`<div class="skel" style="height:34px;width:80px;border-radius:999px;"></div>`;
+  try{
+    const r=await fetch(`${API}/waec-theory/years?subject=${encodeURIComponent(etCurrentSubject)}&exam_type=${etCurrentExam}`);
+    const d=await r.json();
+    const years=d.years||[];
+    if(!years.length){
+      chips.innerHTML=`<p style="color:var(--muted);font-size:13px;">No ${etCurrentExam} theory questions yet for ${etCurrentSubject}.</p>`;
+      return;
+    }
+    const chipStyle="padding:8px 16px;border-radius:999px;border:1.5px solid var(--border);cursor:pointer;font-size:12.5px;font-weight:600;transition:all .18s;";
+    chips.innerHTML = `<span onclick="loadEtQuestions(null)" style="${chipStyle}" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='';">All Years</span>` +
+      years.map(y=>`<span onclick="loadEtQuestions(${y})" style="${chipStyle}" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='';">${y}</span>`).join('');
+  }catch(e){ chips.innerHTML=`<p style="color:var(--danger);font-size:13px;">Could not load years.</p>`; }
+}
+
+async function loadEtQuestions(year){
+  etCurrentYear=year;
+  etShowQuestions();
+  document.getElementById('et-q-subject-crumb').textContent=etCurrentSubject;
+  document.getElementById('et-q-year-crumb').textContent=year?`${etCurrentExam} ${year}`:`${etCurrentExam} · All Years`;
+  const list=document.getElementById('et-questions-list');
+  list.innerHTML=`<div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>`;
+  try{
+    let url=`${API}/waec-theory/questions?subject=${encodeURIComponent(etCurrentSubject)}&exam_type=${etCurrentExam}`;
+    if(year) url+=`&year=${year}`;
+    const r=await fetch(url);
+    const d=await r.json();
+    etQuestionsCache=d;
+    if(!Array.isArray(d)||!d.length){
+      list.innerHTML=`<div class="card" style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:2rem;margin-bottom:10px;">📭</div><p>No questions found.</p></div>`;
+      return;
+    }
+    list.innerHTML=d.map(q=>{
+      const preview=(q.question_text||'').slice(0,70);
+      return `
+      <div class="theory-topic-item" onclick="etOpenQuestion(${q.id})">
+        <div>
+          <div class="topic-name">${q.year} ${q.exam_type}${q.topic?' · '+q.topic:''}</div>
+          <div class="topic-meta">${q.marks||10} marks${q.has_image?' · 🖼️ Has diagram':''} · ${preview}${(q.question_text||'').length>70?'…':''}</div>
+        </div>
+        <svg class="theory-topic-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`;
+    }).join('');
+  }catch(e){ list.innerHTML=`<p style="color:var(--danger);padding:20px;">Could not load questions.</p>`; }
+}
+let etQuestionsCache=[];
+
+function etOpenQuestion(id){
+  const q=etQuestionsCache.find(x=>x.id===id);
+  if(!q) return;
+  etCurrentQId=id; etCurrentQData=q;
+  etShowDetail();
+  stopSpeaking();
+  document.getElementById('et-explain-trigger').style.display='block';
+  document.getElementById('et-explain-loading').style.display='none';
+  document.getElementById('et-explain-content').style.display='none';
+  const badges=[`<span class="badge badge-blue" style="padding:3px 10px;font-size:11px;">${q.exam_type} ${q.year}</span>`,`<span class="badge badge-teal" style="padding:3px 10px;font-size:11px;">${q.marks||10} marks</span>`];
+  if(q.topic) badges.push(`<span class="badge badge-warn" style="padding:3px 10px;font-size:11px;">${q.topic}</span>`);
+  document.getElementById('et-detail-badges').innerHTML=badges.join('');
+  document.getElementById('et-detail-question').textContent=q.question_text||'';
+  if(q.image_url){ document.getElementById('et-detail-img').src=q.image_url; document.getElementById('et-detail-img-wrap').style.display='block'; }
+  else{ document.getElementById('et-detail-img-wrap').style.display='none'; }
+}
+
+async function etGetExplanation(){
+  document.getElementById('et-explain-trigger').style.display='none';
+  document.getElementById('et-explain-loading').style.display='block';
+  document.getElementById('et-explain-content').style.display='none';
+  try{
+    const url=`${API}/waec-theory/explain/${etCurrentQId}${CU?'?username='+encodeURIComponent(CU):''}`;
+    const r=await fetch(url);
+    const d=await r.json();
+    document.getElementById('et-explain-loading').style.display='none';
+    document.getElementById('et-explain-content').style.display='block';
+    etCurrentExplanation=d.explanation||'No explanation available.';
+    document.getElementById('et-explanation-html').innerHTML=renderMarkdown(etCurrentExplanation);
+    if(voiceEnabled) speakText(etCurrentExplanation);
+  }catch(e){
+    document.getElementById('et-explain-loading').style.display='none';
+    document.getElementById('et-explain-trigger').style.display='block';
+    toast('Could not load explanation. Try again.','error');
+  }
+}
+
+function etSpeak(){ if(etCurrentExplanation) speakText(etCurrentExplanation); }
+
+function etShowSubjects(){
+  document.getElementById('et-subjects-view').style.display='block';
+  document.getElementById('et-years-view').style.display='none';
+  document.getElementById('et-questions-view').style.display='none';
+  document.getElementById('et-detail-view').style.display='none';
+  stopSpeaking();
+}
+function etShowYears(){
+  document.getElementById('et-subjects-view').style.display='none';
+  document.getElementById('et-years-view').style.display='block';
+  document.getElementById('et-questions-view').style.display='none';
+  document.getElementById('et-detail-view').style.display='none';
+}
+function etShowQuestions(){
+  document.getElementById('et-subjects-view').style.display='none';
+  document.getElementById('et-years-view').style.display='none';
+  document.getElementById('et-questions-view').style.display='block';
+  document.getElementById('et-detail-view').style.display='none';
+}
+function etShowDetail(){
+  document.getElementById('et-subjects-view').style.display='none';
+  document.getElementById('et-years-view').style.display='none';
+  document.getElementById('et-questions-view').style.display='none';
+  document.getElementById('et-detail-view').style.display='block';
+  window.scrollTo(0,0);
+}
+function etBackToYears(){
+  const idx=etSubjectsCache.findIndex(s=>s.subject===etCurrentSubject);
+  if(idx>-1) etOpenSubject(idx); else etShowSubjects();
+}
+function etBackToQuestions(){ loadEtQuestions(etCurrentYear); stopSpeaking(); }
+
 function theoryTakeQuiz(){
   if(theoryCurrentSubjectName&&theoryCurrentTopicTitle){
     document.getElementById('qz-subj').value=theoryCurrentSubjectName;
