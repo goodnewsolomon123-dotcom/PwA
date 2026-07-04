@@ -2259,79 +2259,73 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
 <div id="page-theory" class="page">
   <div class="pc" style="max-width:800px;">
 
-    <div class="pq-exam-row" style="margin-bottom:20px;max-width:420px;">
-      <button class="pq-exam-btn active" id="th-tab-lessons" onclick="theorySwitchTab('lessons')">📘 Topic Lessons</button>
-      <button class="pq-exam-btn" id="th-tab-exam" onclick="theorySwitchTab('exam')">📝 WAEC/NECO Theory</button>
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px;margin-bottom:24px;max-width:420px;">
+      <button id="th-tab-lessons" onclick="theorySwitchTab('lessons')" style="flex:1;padding:10px;border:none;border-radius:calc(var(--radius-lg) - 4px);font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;background:var(--accent);color:#fff;">
+        Topic Lessons
+      </button>
+      <button id="th-tab-exam" onclick="theorySwitchTab('exam')" style="flex:1;padding:10px;border:none;border-radius:calc(var(--radius-lg) - 4px);font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);">
+        WAEC / NECO Theory
+      </button>
     </div>
 
+  <!-- ══ TOPIC LESSONS ══ -->
   <div id="theory-lessons-wrap">
 
-    <!-- SUBJECTS LIST VIEW -->
+    <!-- Subjects grid -->
     <div id="theory-subjects-view">
-      <div class="sh">Theory Lessons</div>
-      <p class="sh-sub">Study detailed theory topics with AI explanation and voice</p>
-      <div id="theory-subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px;">
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
+      <div class="sh">Topic Lessons</div>
+      <p class="sh-sub">Select a subject to study with AI explanation and voice</p>
+      <div id="theory-subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px;">
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
       </div>
     </div>
 
-    <!-- TOPICS LIST VIEW -->
+    <!-- Topics list -->
     <div id="theory-topics-view" style="display:none;">
       <div class="breadcrumb">
-        <span onclick="theoryShowSubjects()">📚 Subjects</span>
+        <span onclick="theoryShowSubjects()">Subjects</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span id="theory-subject-name" style="color:var(--text);cursor:default;"></span>
+        <span id="theory-subject-name" style="color:var(--text);cursor:default;font-weight:600;"></span>
       </div>
       <div class="sh" id="theory-topics-title" style="margin-bottom:6px;"></div>
-      <p class="sh-sub" style="margin-bottom:20px;">Select a topic to study</p>
-      <div id="theory-topics-list" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
-      </div>
+      <p class="sh-sub" style="margin-bottom:18px;">Select a topic to study</p>
+      <div id="theory-topics-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
-    <!-- LESSON VIEW -->
+    <!-- Lesson view -->
     <div id="theory-lesson-view" style="display:none;">
       <div class="breadcrumb">
-        <span onclick="theoryShowSubjects()">📚 Subjects</span>
+        <span onclick="theoryShowSubjects()">Subjects</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         <span id="lesson-subject-crumb" onclick="theoryBackToTopics()" style="cursor:pointer;"></span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span id="lesson-topic-crumb" style="color:var(--text);cursor:default;"></span>
+        <span id="lesson-topic-crumb" style="color:var(--text);cursor:default;font-weight:600;"></span>
       </div>
 
-      <!-- Loading state -->
-      <div id="theory-loading" style="text-align:center;padding:48px 20px;">
+      <div id="theory-loading" style="text-align:center;padding:52px 20px;">
         <div class="spinner" style="margin:0 auto 16px;"></div>
         <p style="color:var(--muted);font-size:14px;">AI is preparing your lesson...</p>
       </div>
 
-      <!-- Lesson content -->
       <div id="theory-lesson-content" style="display:none;">
-        <!-- Topic title -->
-        <div style="margin-bottom:20px;">
-          <h2 id="lesson-title" style="font-family:'Lora',serif;font-size:1.4rem;font-weight:700;margin-bottom:6px;"></h2>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="lesson-badges"></div>
+        <h2 id="lesson-title" style="font-family:'Lora',serif;font-size:1.35rem;font-weight:700;margin-bottom:8px;"></h2>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;" id="lesson-badges"></div>
+
+        <!-- Diagram -->
+        <div id="lesson-img-wrap" style="display:none;margin-bottom:18px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);">
+          <img id="lesson-img" src="" alt="Diagram" style="width:100%;height:auto;display:block;">
+          <div style="padding:9px 14px;background:var(--bg2);font-size:12px;color:var(--muted);">Diagram / Illustration</div>
         </div>
 
-        <!-- Diagram image if available -->
-        <div id="lesson-img-wrap" class="theory-img-wrap" style="display:none;">
-          <img id="lesson-img" src="" alt="Diagram">
-          <div style="padding:10px 14px;background:var(--bg2);font-size:12px;color:var(--muted);">
-            📌 Diagram/Illustration
-          </div>
-        </div>
-
-        <!-- AI Explanation -->
+        <!-- Explanation card -->
         <div class="card" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-            <div style="font-weight:700;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:7px;">
-              <span>🤖</span> AI Explanation
-            </div>
+            <span style="font-weight:700;font-size:14px;color:var(--navy);">AI Explanation</span>
             <div style="display:flex;gap:7px;">
-              <button class="bubble-btn speak-btn" id="theory-speak-btn" onclick="theorySpeak()">
+              <button class="bubble-btn speak-btn" onclick="theorySpeak()">
                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
                 Speak
               </button>
@@ -2344,93 +2338,81 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
           <div id="lesson-explanation" class="theory-explanation"></div>
         </div>
 
-        <!-- Action buttons -->
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
-          <button class="btn btn-primary" onclick="theoryTakeQuiz()">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-            Take Quiz on This Topic
-          </button>
-          <button class="btn btn-ghost" onclick="go('page-aichat')">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            Ask AI More
-          </button>
-          <button class="btn btn-ghost" onclick="theoryBackToTopics()">
-            ← More Topics
-          </button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="theoryTakeQuiz()">Take Quiz on This Topic</button>
+          <button class="btn btn-ghost" onclick="go('page-aichat')">Ask AI More</button>
+          <button class="btn btn-ghost" onclick="theoryBackToTopics()">More Topics</button>
         </div>
       </div>
     </div>
 
   </div>
-  <!-- /theory-lessons-wrap -->
 
-  <!-- ══════════════════════════════════════════
-       WAEC / NECO EXAM THEORY
-  ══════════════════════════════════════════ -->
+  <!-- ══ WAEC / NECO THEORY ══ -->
   <div id="theory-exam-wrap" style="display:none;">
 
-    <!-- SUBJECTS VIEW -->
+    <!-- Subjects -->
     <div id="et-subjects-view">
       <div class="sh">WAEC / NECO Theory</div>
-      <p class="sh-sub">Real past theory (essay) questions with AI explanations and model answers</p>
-      <div id="et-subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px;">
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
+      <p class="sh-sub">Real past theory questions with AI explanations and model answers</p>
+      <div id="et-subjects-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px;">
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+        <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
       </div>
     </div>
 
-    <!-- YEARS / EXAM TYPE VIEW -->
+    <!-- Years / Exam type -->
     <div id="et-years-view" style="display:none;">
       <div class="breadcrumb">
-        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <span onclick="etShowSubjects()">Subjects</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span id="et-subject-name" style="color:var(--text);cursor:default;"></span>
+        <span id="et-subject-name" style="color:var(--text);cursor:default;font-weight:600;"></span>
       </div>
       <div class="sh" id="et-years-title" style="margin-bottom:6px;"></div>
       <p class="sh-sub" style="margin-bottom:16px;">Choose exam type and year</p>
-      <div class="pq-exam-row" id="et-exam-row" style="max-width:320px;margin-bottom:18px;"></div>
+      <div id="et-exam-row" style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;"></div>
       <div id="et-year-chips" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
     </div>
 
-    <!-- QUESTIONS LIST VIEW -->
+    <!-- Questions list -->
     <div id="et-questions-view" style="display:none;">
       <div class="breadcrumb">
-        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <span onclick="etShowSubjects()">Subjects</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         <span id="et-q-subject-crumb" onclick="etBackToYears()" style="cursor:pointer;"></span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span id="et-q-year-crumb" style="color:var(--text);cursor:default;"></span>
+        <span id="et-q-year-crumb" style="color:var(--text);cursor:default;font-weight:600;"></span>
       </div>
       <div class="sh" style="margin-bottom:6px;">Theory Questions</div>
-      <p class="sh-sub" style="margin-bottom:20px;">Tap a question to view it and get an AI explanation</p>
-      <div id="et-questions-list" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
-        <div class="skel" style="height:64px;border-radius:var(--radius-lg);"></div>
-      </div>
+      <p class="sh-sub" style="margin-bottom:18px;">Tap a question to view and get AI explanation</p>
+      <div id="et-questions-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
-    <!-- QUESTION DETAIL VIEW -->
+    <!-- Question detail -->
     <div id="et-detail-view" style="display:none;">
       <div class="breadcrumb">
-        <span onclick="etShowSubjects()">📝 Subjects</span>
+        <span onclick="etShowSubjects()">Subjects</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         <span onclick="etBackToQuestions()" style="cursor:pointer;">Questions</span>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span style="color:var(--text);cursor:default;">Question</span>
+        <span style="color:var(--text);cursor:default;font-weight:600;">Detail</span>
       </div>
 
+      <!-- Question card -->
       <div class="card" style="margin-bottom:16px;">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="et-detail-badges"></div>
-        <div id="et-detail-question" style="font-size:14px;line-height:1.85;white-space:pre-wrap;"></div>
-        <div id="et-detail-img-wrap" class="theory-img-wrap" style="display:none;margin-top:14px;">
-          <img id="et-detail-img" src="" alt="Diagram">
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;" id="et-detail-badges"></div>
+        <div id="et-detail-question" style="font-size:14.5px;line-height:1.85;white-space:pre-wrap;color:var(--text);"></div>
+        <div id="et-detail-img-wrap" style="display:none;margin-top:16px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);">
+          <img id="et-detail-img" src="" alt="Diagram" style="width:100%;height:auto;display:block;">
+          <div style="padding:9px 14px;background:var(--bg2);font-size:12px;color:var(--muted);">Diagram / Illustration</div>
         </div>
       </div>
 
-      <div id="et-explain-trigger">
-        <button class="btn btn-primary" onclick="etGetExplanation()">
-          🤖 Get AI Explanation &amp; Model Answer
+      <!-- Get explanation -->
+      <div id="et-explain-trigger" style="margin-bottom:16px;">
+        <button class="btn btn-primary" onclick="etGetExplanation()" style="width:100%;">
+          Get AI Explanation &amp; Model Answer
         </button>
       </div>
 
@@ -2439,11 +2421,9 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
         <p style="color:var(--muted);font-size:14px;">AI is preparing a detailed explanation...</p>
       </div>
 
-      <div id="et-explain-content" class="card" style="display:none;">
+      <div id="et-explain-content" class="card" style="display:none;margin-bottom:16px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-          <div style="font-weight:700;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:7px;">
-            <span>🤖</span> AI Explanation &amp; Model Answer
-          </div>
+          <span style="font-weight:700;font-size:14px;color:var(--navy);">AI Explanation &amp; Model Answer</span>
           <div style="display:flex;gap:7px;">
             <button class="bubble-btn speak-btn" onclick="etSpeak()">
               <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
@@ -2458,20 +2438,13 @@ footer .logo { font-size:17px; margin-bottom:10px; display:block; }
         <div id="et-explanation-html" class="theory-explanation"></div>
       </div>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
-        <button class="btn btn-ghost" onclick="go('page-aichat')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Ask AI More
-        </button>
-        <button class="btn btn-ghost" onclick="etBackToQuestions()">
-          ← More Questions
-        </button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('page-aichat')">Ask AI More</button>
+        <button class="btn btn-ghost" onclick="etBackToQuestions()">More Questions</button>
       </div>
     </div>
 
   </div>
-  <!-- /theory-exam-wrap -->
-
   </div>
 </div>
 
@@ -3994,36 +3967,79 @@ let theoryCurrentSubjectName = '';
 let theoryCurrentTopicTitle = '';
 let theoryCurrentExplanation = '';
 
+// Core subjects order — these come first
+const CORE_SUBJECTS = ['English','Mathematics','Physics','Biology','Chemistry','Literature','Government','Economics','Geography','History','Commerce','Agriculture','Computer','Civic'];
+
+function getCoreRank(name){
+  for(let i=0;i<CORE_SUBJECTS.length;i++){
+    if(name.toLowerCase().includes(CORE_SUBJECTS[i].toLowerCase())) return i;
+  }
+  return 999;
+}
+
+function theorySwitchTab(tab){
+  const lessonsWrap = document.getElementById('theory-lessons-wrap');
+  const examWrap    = document.getElementById('theory-exam-wrap');
+  const btnLessons  = document.getElementById('th-tab-lessons');
+  const btnExam     = document.getElementById('th-tab-exam');
+
+  if(tab === 'lessons'){
+    lessonsWrap.style.display = 'block';
+    examWrap.style.display    = 'none';
+    btnLessons.style.background = 'var(--accent)';
+    btnLessons.style.color      = '#fff';
+    btnExam.style.background    = 'transparent';
+    btnExam.style.color         = 'var(--muted)';
+    loadTheorySubjects();
+  } else {
+    lessonsWrap.style.display = 'none';
+    examWrap.style.display    = 'block';
+    btnExam.style.background  = 'var(--accent)';
+    btnExam.style.color       = '#fff';
+    btnLessons.style.background = 'transparent';
+    btnLessons.style.color      = 'var(--muted)';
+    etLoadSubjects();
+  }
+}
+
 async function loadTheorySubjects(){
   theoryShowSubjects();
   const grid = document.getElementById('theory-subjects-grid');
   grid.innerHTML = `
-    <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-    <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>
-    <div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>`;
+    <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+    <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>
+    <div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>`;
   try{
     const r = await fetch(`${API}/subjects`);
     const d = await r.json();
     if(!Array.isArray(d)||!d.length){
       grid.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">
-        <div style="font-size:2.5rem;margin-bottom:12px;">📚</div>
+        <div style="font-size:2rem;margin-bottom:10px;">📚</div>
         <p>No subjects yet. Check back soon!</p>
       </div>`;
       return;
     }
-    const subjectIcons={'English':'📖','Mathematics':'📐','Biology':'🔬','Physics':'⚛️','Chemistry':'⚗️','Economics':'📊','Government':'⚖️','History':'🏛️','Geography':'🌍','Literature':'📜','Commerce':'🏪','Agriculture':'🌾','Computer':'💻','French':'🇫🇷','Music':'🎵','Art':'🎨','Physical':'⚽','Technical':'📏','Food':'🍽️','Civic':'🏳️'};
-    function getIcon(name){ for(const [k,v] of Object.entries(subjectIcons)){ if(name.toLowerCase().includes(k.toLowerCase())) return v; } return '📚'; }
-    const colors=['#1d4ed8','#0d9488','#7c3aed','#d97706','#dc2626','#16a34a','#0284c7','#db2777'];
-    grid.innerHTML = d.map((s,i)=>`
+    // Sort — core subjects first, then rest
+    const sorted = [...d].sort((a,b) => getCoreRank(a.name) - getCoreRank(b.name));
+    const colors = ['#1d4ed8','#0d9488','#7c3aed','#d97706','#dc2626','#16a34a','#0284c7','#db2777','#b45309','#0891b2'];
+    grid.innerHTML = sorted.map((s,i) => `
       <div class="theory-subject-card" onclick="loadTheoryTopics(${s.id},'${s.name.replace(/'/g,"\\'")}')">
-        <div class="theory-subject-icon" style="background:${colors[i%colors.length]};">${getIcon(s.name)}</div>
+        <div class="theory-subject-icon" style="background:${colors[i%colors.length]};font-size:1.1rem;">
+          ${getSubjectLetter(s.name)}
+        </div>
         <div class="theory-subject-info">
           <h3>${s.name}</h3>
           <p>${s.level}</p>
         </div>
-        <svg width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <svg width="15" height="15" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>`).join('');
   }catch(e){ grid.innerHTML=`<p style="color:var(--danger);padding:20px;">Could not load subjects.</p>`; }
+}
+
+function getSubjectLetter(name){
+  const icons = {'English':'En','Mathematics':'Mx','Biology':'Bi','Physics':'Ph','Chemistry':'Ch','Economics':'Ec','Government':'Gv','History':'Hs','Geography':'Ge','Literature':'Lt','Commerce':'Co','Agriculture':'Ag','Computer':'IT','French':'Fr','Music':'Mu','Art':'Art','Physical':'PE','Technical':'TD','Food':'FN','Civic':'CK'};
+  for(const [k,v] of Object.entries(icons)){ if(name.toLowerCase().includes(k.toLowerCase())) return v; }
+  return name.substring(0,2).toUpperCase();
 }
 
 async function loadTheoryTopics(subjectId, subjectName){
@@ -4121,31 +4137,31 @@ function theorySwitchTab(tab){
 async function loadExamTheorySubjects(){
   etShowSubjects();
   const grid=document.getElementById('et-subjects-grid');
-  grid.innerHTML=`<div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:80px;border-radius:var(--radius-lg);"></div>`;
+  grid.innerHTML=`<div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div><div class="skel" style="height:72px;border-radius:var(--radius-lg);"></div>`;
   try{
     const r=await fetch(`${API}/waec-theory/subjects`);
     const d=await r.json();
-    etSubjectsCache=d;
-    if(!Array.isArray(d)||!d.length){
+    // Sort core subjects first
+    const sorted = [...(Array.isArray(d)?d:[])].sort((a,b)=>getCoreRank(a.subject)-getCoreRank(b.subject));
+    etSubjectsCache=sorted;
+    if(!sorted.length){
       grid.innerHTML=`<div class="card" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">
-        <div style="font-size:2.5rem;margin-bottom:12px;">📝</div>
-        <p>No WAEC/NECO theory questions yet. Check back soon!</p>
+        <div style="font-size:2rem;margin-bottom:10px;">📄</div>
+        <p>No WAEC/NECO theory questions yet. Content is being added soon!</p>
       </div>`;
       return;
     }
-    const subjectIcons={'English':'📖','Mathematics':'📐','Biology':'🔬','Physics':'⚛️','Chemistry':'⚗️','Economics':'📊','Government':'⚖️','History':'🏛️','Geography':'🌍','Literature':'📜','Commerce':'🏪','Agriculture':'🌾','Computer':'💻','French':'🇫🇷','Civic':'🏳️'};
-    function getIcon(name){ for(const [k,v] of Object.entries(subjectIcons)){ if(name.toLowerCase().includes(k.toLowerCase())) return v; } return '📝'; }
-    const colors=['#1d4ed8','#0d9488','#7c3aed','#d97706','#dc2626','#16a34a','#0284c7','#db2777'];
-    grid.innerHTML=d.map((s,i)=>{
+    const colors=['#1d4ed8','#0d9488','#7c3aed','#d97706','#dc2626','#16a34a','#0284c7','#db2777','#b45309','#0891b2'];
+    grid.innerHTML=sorted.map((s,i)=>{
       const examBadges=s.exams.map(e=>`<span class="badge ${e.exam_type==='NECO'?'badge-blue':'badge-teal'}" style="font-size:10px;padding:2px 8px;">${e.exam_type} · ${e.count}</span>`).join(' ');
       return `
       <div class="theory-subject-card" onclick="etOpenSubject(${i})">
-        <div class="theory-subject-icon" style="background:${colors[i%colors.length]};">${getIcon(s.subject)}</div>
+        <div class="theory-subject-icon" style="background:${colors[i%colors.length]};font-size:1rem;font-weight:800;letter-spacing:-0.5px;">${getSubjectLetter(s.subject)}</div>
         <div class="theory-subject-info" style="flex:1;">
           <h3>${s.subject}</h3>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;">${examBadges}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">${examBadges}</div>
         </div>
-        <svg width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <svg width="15" height="15" fill="none" stroke="var(--muted)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>`;
     }).join('');
   }catch(e){ grid.innerHTML=`<p style="color:var(--danger);padding:20px;">Could not load subjects. Check your connection.</p>`; }
